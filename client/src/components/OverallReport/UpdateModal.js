@@ -12,7 +12,7 @@ const UpdateModal = ({ id, setIsLoading }) => {
   useEffect(() => {
     if (id && id._id) {
       axios
-        .get("http://localhost:8080/getusers/" + id._id)
+        .get("https://leave-monitoring.onrender.com/getusers/" + id._id)
         .then((res) => {
           setapplyDate(new Date(res.data.applydate).toISOString().slice(0, 10));
         })
@@ -22,7 +22,7 @@ const UpdateModal = ({ id, setIsLoading }) => {
 
   const updateRecords = () => {
     axios
-      .put("http://localhost:8080/update/" + id._id, {
+      .put("https://leave-monitoring.onrender.com/update/" + id._id, {
         currentuserid: adminProfile?._id,
         applydate: applydate,
       })
