@@ -22,7 +22,7 @@ img.navbar_brand_light {
 }
 .header_nav li > button {
   color: #fff;
-  font-weight: 700;
+  /* font-weight: 700; */
   text-decoration: none;
   all: unset;
   cursor: pointer;

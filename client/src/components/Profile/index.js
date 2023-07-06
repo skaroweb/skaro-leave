@@ -69,7 +69,9 @@ function Profile() {
   const handleDelete = async (id) => {
     try {
       setEditing(false);
-      const filteredDataRes = await axios.get("https://leave-monitoring.onrender.com/getusers");
+      const filteredDataRes = await axios.get(
+        "https://leave-monitoring.onrender.com/getusers"
+      );
 
       const filteredData = filteredDataRes.data.filter(
         (obj) => obj.currentuserid === id
@@ -77,11 +79,15 @@ function Profile() {
 
       await Promise.all(
         filteredData.map((item) =>
-          axios.delete("https://leave-monitoring.onrender.com/delete/" + item._id)
+          axios.delete(
+            "https://leave-monitoring.onrender.com/delete/" + item._id
+          )
         )
       );
 
-      await axios.delete("https://leave-monitoring.onrender.com/api/employeeinfo/delete/" + id);
+      await axios.delete(
+        "https://leave-monitoring.onrender.com/api/employeeinfo/delete/" + id
+      );
 
       setIsLoading(true);
       toast.info("Employee deleted successfully");
@@ -98,7 +104,9 @@ function Profile() {
   const updateEmpInfo = async (event) => {
     event.preventDefault();
     setIsLoadingSpinner(true);
-    const filteredDataRes = await axios.get("https://leave-monitoring.onrender.com/getusers");
+    const filteredDataRes = await axios.get(
+      "https://leave-monitoring.onrender.com/getusers"
+    );
 
     const filteredData = filteredDataRes.data.filter(
       (obj) => obj.currentuserid === taskId
@@ -112,18 +120,22 @@ function Profile() {
       )
     );
     await axios
-      .put("https://leave-monitoring.onrender.com/api/employeeinfo/update/" + taskId, {
-        id: id,
-        name: name,
-        email: email,
-        password: password,
-        gender: gender,
-        designation: designation,
-        phone: phno,
-        joiningdate: joining,
-        dateofbirth: dob,
-        uploaded_file: profilepic,
-      })
+      .put(
+        "https://leave-monitoring.onrender.com/api/employeeinfo/update/" +
+          taskId,
+        {
+          id: id,
+          name: name,
+          email: email,
+          password: password,
+          gender: gender,
+          designation: designation,
+          phone: phno,
+          joiningdate: joining,
+          dateofbirth: dob,
+          uploaded_file: profilepic,
+        }
+      )
       .then((response) => {
         // console.log(response.data);
         setIsLoading(true);
@@ -517,7 +529,7 @@ function Profile() {
                           <div className="mb-3 col-md-6">
                             <div id="firstName">
                               <label htmlFor="formFile" className="form-label">
-                                Default file input example
+                                Profile photo
                               </label>
                               <input
                                 className="form-control"
