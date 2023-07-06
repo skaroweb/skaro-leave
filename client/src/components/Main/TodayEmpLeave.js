@@ -11,7 +11,7 @@ const TodayEmpLeave = (props) => {
     // Simulated API fetch or data initialization
     const fetchData = async () => {
       // Fetch or set data for array1
-      const response1 = await fetch("http://localhost:8080/api/employeeinfo/");
+      const response1 = await fetch("https://leave-monitoring.onrender.com/api/employeeinfo/");
       const data1 = await response1.json();
 
       setArray1(data1);
