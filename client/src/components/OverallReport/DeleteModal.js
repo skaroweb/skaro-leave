@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 const DeleteModal = ({ id, setIsLoading }) => {
   const deleteRecords = () => {
     axios
-      .delete("http://localhost:8080/delete/" + id._id)
+      .delete("https://leave-monitoring.onrender.com/delete/" + id._id)
       .then((res) => {
         setIsLoading(true);
         toast.info("Leave delete successfully");
