@@ -26,7 +26,7 @@ const ViewUserDetails = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/employeeinfo/${id}`
+          `https://leave-monitoring.onrender.com/api/employeeinfo/${id}`
         );
         const profile = await response.data;
 
