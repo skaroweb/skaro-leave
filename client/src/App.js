@@ -48,10 +48,10 @@ function App() {
       try {
         if (currentUserId) {
           const response = await axios.get(
-            `http://localhost:8080/api/employeeinfo/${currentUserId}`
+            `https://leave-monitoring.onrender.com/api/employeeinfo/${currentUserId}`
           );
           const EmpAll = await axios.get(
-            `http://localhost:8080/api/employeeinfo/`
+            `https://leave-monitoring.onrender.com/api/employeeinfo/`
           );
 
           const profile = response.data;
