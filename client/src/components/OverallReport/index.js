@@ -82,7 +82,7 @@ function OverallReport() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/employeeinfo/")
+      .get("https://leave-monitoring.onrender.com/api/employeeinfo/")
       .then((res) => {
         setEmpProfile(res.data);
       })
@@ -91,7 +91,7 @@ function OverallReport() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getusers")
+      .get("https://leave-monitoring.onrender.com/getusers")
       .then((response) => {
         setIsLoading(false);
         let filteredArray = response.data.filter(function (obj) {
