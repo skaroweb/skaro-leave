@@ -11,7 +11,7 @@ const SubNav = () => {
   const email = localStorage.getItem("email");
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/employeeinfo/")
+      .get("https://leave-monitoring.onrender.com/api/employeeinfo/")
       .then((res) => {
         let profile = res.data.filter((user) => {
           return user.email === email;
