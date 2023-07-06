@@ -68,7 +68,7 @@ function EmpLeaves() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/getusers")
+      .get("https://leave-monitoring.onrender.com/getusers")
       .then((response) => {
         let filteredArray = response.data.filter(function (obj) {
           return obj.status !== "pending";
