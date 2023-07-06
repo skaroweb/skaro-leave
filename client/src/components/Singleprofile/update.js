@@ -11,7 +11,7 @@ function Update_single_profile(props) {
   const updateUser = async (event) => {
     try {
       await axios.put(
-        "http://localhost:8080/api/employeeinfo/" + props.user.id,
+        "https://leave-monitoring.onrender.com/api/employeeinfo/" + props.user.id,
         {
           email: "values.email222",
         }
