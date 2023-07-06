@@ -69,7 +69,7 @@ function Profile() {
   const handleDelete = async (id) => {
     try {
       setEditing(false);
-      const filteredDataRes = await axios.get("http://localhost:8080/getusers");
+      const filteredDataRes = await axios.get("https://leave-monitoring.onrender.com/getusers");
 
       const filteredData = filteredDataRes.data.filter(
         (obj) => obj.currentuserid === id
@@ -77,11 +77,11 @@ function Profile() {
 
       await Promise.all(
         filteredData.map((item) =>
-          axios.delete("http://localhost:8080/delete/" + item._id)
+          axios.delete("https://leave-monitoring.onrender.com/delete/" + item._id)
         )
       );
 
-      await axios.delete("http://localhost:8080/api/employeeinfo/delete/" + id);
+      await axios.delete("https://leave-monitoring.onrender.com/api/employeeinfo/delete/" + id);
 
       setIsLoading(true);
       toast.info("Employee deleted successfully");
@@ -98,7 +98,7 @@ function Profile() {
   const updateEmpInfo = async (event) => {
     event.preventDefault();
     setIsLoadingSpinner(true);
-    const filteredDataRes = await axios.get("http://localhost:8080/getusers");
+    const filteredDataRes = await axios.get("https://leave-monitoring.onrender.com/getusers");
 
     const filteredData = filteredDataRes.data.filter(
       (obj) => obj.currentuserid === taskId
@@ -106,13 +106,13 @@ function Profile() {
 
     await Promise.all(
       filteredData.map((item) =>
-        axios.put("http://localhost:8080/update/" + item._id, {
+        axios.put("https://leave-monitoring.onrender.com/update/" + item._id, {
           name: name,
         })
       )
     );
     await axios
-      .put("http://localhost:8080/api/employeeinfo/update/" + taskId, {
+      .put("https://leave-monitoring.onrender.com/api/employeeinfo/update/" + taskId, {
         id: id,
         name: name,
         email: email,
@@ -171,7 +171,7 @@ function Profile() {
     setIsLoadingSpinner(true);
     axios
       .post(
-        "http://localhost:8080/api/employeeinfo/",
+        "https://leave-monitoring.onrender.com/api/employeeinfo/",
         {
           id: id,
           name: name,
@@ -224,7 +224,7 @@ function Profile() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/employeeinfo/")
+      .get("https://leave-monitoring.onrender.com/api/employeeinfo/")
       .then((res) => {
         let filteredArray = res.data.filter(function (obj) {
           return obj.isAdmin === false;
