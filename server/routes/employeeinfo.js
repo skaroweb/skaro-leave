@@ -97,10 +97,17 @@ router.use("/update/:id", async (req, res) => {
   try {
     const { error } = validate(req.body);
 
-    if (error)
-      return res.status(400).send({ message: error.details[0].message });
+    // if (error)
+    //   return res.status(400).send({ message: error.details[0].message });
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
-    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    //const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+    const existingUser = await employeeinfoModel.findById(req.params.id);
+    if (req.body.password === "") {
+      var hashPassword = await bcrypt.hash(existingUser.password, salt);
+    } else {
+      var hashPassword = await bcrypt.hash(req.body.password, salt);
+    }
     // Upload image to cloudinary
 
     // const existingUser = await employeeinfoModel.findById(req.params.id);
