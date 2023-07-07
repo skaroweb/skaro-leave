@@ -24,6 +24,9 @@
   border-radius: 12px 12px 0 0;
   overflow: hidden;
 }
+.leaderboard__profiles > p {
+  text-align: center;
+}
 .leaderboard header .leaderboard__title {
   position: absolute;
   z-index: 2;
