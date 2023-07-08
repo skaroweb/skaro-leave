@@ -10,8 +10,8 @@ import ExcelReport from "./ExcelReport";
 import EmpLeaveChart from "./EmpLeaveChart";
 import DeleteModal from "./DeleteModal";
 import { useSelector } from "react-redux";
-import { Button, Dropdown, ButtonGroup } from "react-bootstrap";
-import { ToastContainer, toast } from "react-toastify";
+import { Dropdown, ButtonGroup } from "react-bootstrap";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UpdateModal from "./UpdateModal";
 
@@ -232,9 +232,9 @@ function OverallReport() {
   };
 
   // Toggle seletedMonth state
-  const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value);
-  };
+  // const handleMonthChange = (event) => {
+  //   setSelectedMonth(event.target.value);
+  // };
 
   // Toggle seletedMonth state
   const handleStatusChange = (event) => {
@@ -243,15 +243,15 @@ function OverallReport() {
   };
 
   // Toggle seletedYear state
-  const handleYearChange = (event) => {
-    const inputYear = Number(event.target.value);
+  // const handleYearChange = (event) => {
+  //   const inputYear = Number(event.target.value);
 
-    if (inputYear === selectedYear) {
-      setSelectedYear("");
-    } else {
-      setSelectedYear(inputYear);
-    }
-  };
+  //   if (inputYear === selectedYear) {
+  //     setSelectedYear("");
+  //   } else {
+  //     setSelectedYear(inputYear);
+  //   }
+  // };
 
   const handleDateChange = (event) => {
     const { name, value } = event.target;
@@ -291,22 +291,22 @@ function OverallReport() {
     report,
   ]);
 
-  var monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const year = new Date().getFullYear();
-  const years = Array.from(new Array(20), (val, index) => index + year);
+  // var monthNames = [
+  //   "January",
+  //   "February",
+  //   "March",
+  //   "April",
+  //   "May",
+  //   "June",
+  //   "July",
+  //   "August",
+  //   "September",
+  //   "October",
+  //   "November",
+  //   "December",
+  // ];
+  // const year = new Date().getFullYear();
+  // const years = Array.from(new Array(20), (val, index) => index + year);
 
   return (
     <>

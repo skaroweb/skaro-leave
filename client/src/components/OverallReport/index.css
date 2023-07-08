@@ -20,7 +20,7 @@ h2.current_year_leave_info {
   flex-wrap: wrap;
   justify-content: space-between;
   text-align: center;
-  align-items: end;
+  align-items: flex-end;
 }
 .overall-filter > div {
   width: 160px;

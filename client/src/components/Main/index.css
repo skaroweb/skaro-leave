@@ -55,7 +55,7 @@ td.text-success {
   font-size: 15px;
   text-transform: capitalize;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   max-width: 100%;
   margin-left: auto;

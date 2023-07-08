@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import SubNav from "../Helper/SubNav";
 import Header from "../Header";
@@ -11,8 +11,6 @@ function EmpLeaves() {
   const [currentPage, setCurrentPage] = useState(0); //Pagination
   const [filteredList, setFilteredList] = useState(report);
 
-  // Selected User name filter
-  const [selectedName, setselectedName] = useState("");
   // Selected Month filter
   const [selectedMonth, setSelectedMonth] = useState("");
   // Selected Year filter
@@ -28,10 +26,6 @@ function EmpLeaves() {
     todate: "",
   });
   const adminProfile = useSelector((state) => state.adminProfile);
-
-  const { id } = useParams();
-
-  //console.log(id);
 
   const location = useLocation();
 
@@ -76,20 +70,13 @@ function EmpLeaves() {
         let filteredArray2 = filteredArray.filter(function (obj) {
           return obj.currentuserid === location.state.user._id;
         });
-        // let leave_count = filteredArray
-        //   .filter(function (obj) {
-        //     return obj.name === location.state.user.name;
-        //   })
-        //   .filter(function (obj) {
-        //     return obj.status === "approve";
-        //   });
-        // setCountLeave(leave_count);
+
         setReport(filteredArray2.reverse());
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [location.state.user.name]);
+  }, [location.state.user._id]);
 
   const filterByStatus = (filteredData) => {
     // Avoid filter for empty string
@@ -104,27 +91,9 @@ function EmpLeaves() {
   };
 
   const filterByDate = (filteredData) => {
-    // console.log(selectedDate);
-    // const filteredCars = new Date("2023-06-13T00:00:00.000Z")
-    //   .toLocaleString()
-    //   .split(",")[0];
     if (selectedDate.fromdate === "" || selectedDate.todate === "") {
       return filteredData;
     }
-
-    // const filteredCars = filteredData.filter(
-    //   (car) =>
-    //     `${new Date(car.applydate).getFullYear()}-${(
-    //       "0" +
-    //       (new Date(car.applydate).getMonth() + 1)
-    //     ).slice(-2)}-${new Date(car.applydate).getDate()}` >=
-    //       selectedDate.fromdate &&
-    //     `${new Date(car.applydate).getFullYear()}-${(
-    //       "0" +
-    //       (new Date(car.applydate).getMonth() + 1)
-    //     ).slice(-2)}-${new Date(car.applydate).getDate()}` <=
-    //       selectedDate.todate
-    // );
 
     const filteredCars = filteredData
       .sort((a, b) => a.name.localeCompare(b.name))
@@ -149,14 +118,6 @@ function EmpLeaves() {
       );
 
     return filteredCars;
-
-    // Avoid filter for empty string
-    //  if (Object.keys(selectedDate).length === 0) {
-    // }
-    // const filteredCars = filteredData.filter(
-    //   (date) => date >= selectedDate.fromdate && date <= selectedDate.todate
-    // );
-    //return filteredCars//;
   };
 
   const filterByYear = (filteredData) => {
@@ -188,11 +149,6 @@ function EmpLeaves() {
           .indexOf(selectedMonth) !== -1
     );
     return filteredCars;
-  };
-
-  // Update seletedBrand state
-  const handleBrandChange = (event) => {
-    setselectedName(event.target.value);
   };
 
   // Toggle seletedMonth state
@@ -352,10 +308,7 @@ function EmpLeaves() {
             </thead>
             <tbody>
               {filteredList
-                // .sort(function (a, b) {
-                //   return new Date(a.applydate) - new Date(b.applydate);
-                // })
-                // .sort((a, b) => a.name.localeCompare(b.name))
+
                 .slice(offset, offset + PER_PAGE)
                 .map((item, index) => (
                   <tr key={index}>
@@ -394,10 +347,6 @@ function EmpLeaves() {
               pageRangeDisplayed={2}
               marginPagesDisplayed={1}
             />
-            {/* <span>
-            Showing <b>{offset + PER_PAGE}</b> out of{" "}
-            <b>{filteredList.length}</b> entries
-          </span> */}
             <div className="total_leave">
               Total result count: <span>{filteredList.length}</span>
             </div>
@@ -405,78 +354,6 @@ function EmpLeaves() {
         </div>
       </div>
     </>
-    // <>
-    //   <div>
-    //     <div>Filter by status :</div>
-    //     <select value={selectedStatus} onChange={handleStatusChange}>
-    //       <option value="">All</option>
-    //       <option value="approve">Approve</option>
-    //       <option value="reject">Reject</option>
-    //     </select>
-    //     <div>Filter by year :</div>
-    //     <select value={selectedYear} onChange={handleYearChange}>
-    //       {/* <option value="2025">2025</option>
-    //     <option value="2024">2024</option>
-    //     <option value="2023">2023</option>
-    //     <option value="2022">2022</option> */}
-    //       <option value="">All</option>
-    //       {years.map((key, index) => (
-    //         <option key={index} value={key}>
-    //           {key}
-    //         </option>
-    //       ))}
-    //     </select>
-    //     <div>Filter by Month :</div>
-    //     <select value={selectedMonth} onChange={handleMonthChange}>
-    //       <option value="">All</option>
-    //       {monthNames.map((name, index) => (
-    //         <option key={index} value={name}>
-    //           {name}
-    //         </option>
-    //       ))}
-    //     </select>
-    //     <input
-    //       type="date"
-    //       value={selectedDate.fromdate}
-    //       name="fromdate"
-    //       onChange={handleDateChange}
-    //     />
-    //     <input
-    //       type="date"
-    //       value={selectedDate.todate}
-    //       name="todate"
-    //       onChange={handleDateChange}
-    //     />
-    //     <button onClick={DeselectAll}>Deselect All</button>
-    //     <div className="total_leave">{`Total approve leave: ${countLeave.length} `}</div>
-    //     <table>
-    //       <tbody>
-    //         <tr>
-    //           <th>Name</th>
-    //           <th>Date</th>
-    //           <th>status</th>
-    //         </tr>
-
-    //         {filteredList
-    //           .sort((a, b) => a.name.localeCompare(b.name))
-    //           .map((item, index) => (
-    //             <tr key={index}>
-    //               <td>{item.name}</td>
-
-    //               <td>
-    //                 {new Date(item.applydate).toLocaleDateString("en-US", {
-    //                   year: "numeric",
-    //                   month: "long",
-    //                   day: "numeric",
-    //                 })}
-    //               </td>
-    //               <td>{item.status}</td>
-    //             </tr>
-    //           ))}
-    //       </tbody>
-    //     </table>
-    //   </div>
-    // </>
   );
 }
 export default EmpLeaves;

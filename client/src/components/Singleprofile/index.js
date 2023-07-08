@@ -1,26 +1,15 @@
-// import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-// import Button from "react-bootstrap/Button";
-// import Form from "react-bootstrap/Form";
-// import Modal from "react-bootstrap/Modal";
 import Header from "../Header";
 import SubNav from "../Helper/SubNav";
 import "./index.css";
 import { useSelector } from "react-redux";
-// import axios from "axios";
 
 const ViewUserDetails = () => {
   const [specificUser, setSpecificUser] = useState([]);
   const { id } = useParams();
   const adminProfile = useSelector((state) => state.adminProfile);
-
-  const navigate = useNavigate();
-
-  const handleGoBack = () => {
-    navigate("/profile"); // Replace '/profile' with your actual profile page route
-  };
 
   useEffect(() => {
     const fetchData = async () => {

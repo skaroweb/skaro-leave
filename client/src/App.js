@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { Route, Routes, Navigate, Router } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 import Main2 from "./components/Main/index2";
 import Signup from "./components/Signup";
@@ -22,6 +22,7 @@ import { setEmpProfile } from "./store/empProfileSlice";
 function App() {
   const [token, setToken] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [adminMain, setAdminMain] = useState([]);
 
   const dispatch = useDispatch();
   const adminProfile = useSelector((state) => state.adminProfile);
@@ -29,7 +30,6 @@ function App() {
   // const [boxes, setBoxes] = useState([]);
   // const user = localStorage.getItem("token");
   const email = localStorage.getItem("email");
-  const admin = "mithu@skarosoft.com";
 
   useEffect(() => {
     // Your logic to get the token
@@ -53,7 +53,14 @@ function App() {
           const EmpAll = await axios.get(
             `https://leave-monitoring.onrender.com/api/employeeinfo/`
           );
-
+          const Admin = EmpAll.data
+            .filter((currentValue) => {
+              return currentValue.isAdmin === true;
+            })
+            .map((currentValue) => {
+              return currentValue.email;
+            });
+          setAdminMain(Admin.join(", "));
           const profile = response.data;
 
           dispatch(setAdminProfile(profile));
@@ -67,6 +74,7 @@ function App() {
     fetchCurrentUserProfile();
   }, [currentUserId, dispatch]);
   //console.log(adminProfile.isAdmin === true);
+
   return (
     <div className="App">
       <Routes>

@@ -31,11 +31,11 @@ function Profile() {
   const [profilepic, setProfilepic] = useState("");
   const [data, setData] = useState([]);
   const [dataAdmin, setDataAdmin] = useState([]);
-  const [showForm, setShowForm] = useState(true);
+  // const [showForm, setShowForm] = useState(true);
   const [editing, setEditing] = useState(false);
   const [taskId, setTaskId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  //const [error, setError] = useState("");
   const [isLoadingSpinner, setIsLoadingSpinner] = useState(false);
   const [currentUser, setCurrentUser] = useState([]);
   const [EmpId, setEmpId] = useState([]);
@@ -43,9 +43,9 @@ function Profile() {
 
   const navigate = useNavigate();
 
-  const showFormClick = () => {
-    setShowForm(!showForm);
-  };
+  // const showFormClick = () => {
+  //   setShowForm(!showForm);
+  // };
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -152,8 +152,8 @@ function Profile() {
         setDob([]);
         // 👇️ reset file input : File input cannot be controlled, there is no React specific way to do that.
         inputRef.current.value = null;
-        setShowForm(false);
-        setError("");
+        // setShowForm(false);
+        // setError("");
         toast.success("Employee Info Updated successfully");
       })
       .catch(function (error) {
@@ -163,7 +163,7 @@ function Profile() {
           error.response.status >= 400 &&
           error.response.status <= 500
         ) {
-          setError(error.response.data.message);
+          // setError(error.response.data.message);
           toast.warn(error.response.data.message);
         }
       });
@@ -214,8 +214,8 @@ function Profile() {
         setDob([]);
         // 👇️ reset file input : File input cannot be controlled, there is no React specific way to do that.
         inputRef.current.value = null;
-        setShowForm(false);
-        setError("");
+        // setShowForm(false);
+        //setError("");
         toast.success("Employee added successfully");
       })
       .catch(function (error) {
@@ -226,7 +226,7 @@ function Profile() {
           error.response.status >= 400 &&
           error.response.status <= 500
         ) {
-          setError(error.response.data.message);
+          // setError(error.response.data.message);
           toast.warn(error.response.data.message);
         }
       });
@@ -252,7 +252,7 @@ function Profile() {
             return obj._id;
           });
         dispatch(setEmpProfile(res.data));
-        setCurrentUser(currentUser);
+        setCurrentUser(JSON.stringify(currentUser));
         setIsLoading(false);
         setData(filteredArray);
         setDataAdmin(filteredArray2);
@@ -708,7 +708,7 @@ function Profile() {
                                 View Profile
                               </div>
 
-                              {currentUser == user._id ? (
+                              {currentUser === user._id ? (
                                 <div
                                   className={styles.view_cta}
                                   onClick={() => {
@@ -730,7 +730,7 @@ function Profile() {
                                 ""
                               )}
 
-                              {currentUser == user._id ? (
+                              {currentUser === user._id ? (
                                 <>
                                   <div
                                     onClick={() => {
@@ -856,7 +856,7 @@ function Profile() {
                               >
                                 View Profile
                               </div>
-                              {currentUser == user._id && (
+                              {currentUser === user._id && (
                                 <div
                                   className={styles.view_cta}
                                   onClick={() => {
@@ -867,7 +867,7 @@ function Profile() {
                                 </div>
                               )}
 
-                              {currentUser == user._id && (
+                              {currentUser === user._id && (
                                 <>
                                   <div
                                     onClick={() => {

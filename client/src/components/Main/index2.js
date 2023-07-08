@@ -5,7 +5,7 @@ import axios from "axios";
 import Header from "../Header";
 import jwt_decode from "jwt-decode";
 //import { useNavigate } from "react-router-dom";
-import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,7 +13,6 @@ import SubNav from "../Helper/SubNav";
 import TodayEmpLeave from "./TodayEmpLeave";
 import UpcomingLeave from "./UpcomingLeave";
 import { useSelector } from "react-redux";
-import Test from "./Test";
 
 const Main2 = () => {
   const [listOfUsers, setListOfUsers] = useState([]);
@@ -28,7 +27,6 @@ const Main2 = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, ascending: true });
   const [appliedUsers, setAppliedUsers] = useState([]);
   const [upcomingLeaves, setUpcomingLeaves] = useState([]);
-  const [test, setTest] = useState("");
 
   const adminProfile = useSelector((state) => state.adminProfile);
   const empProfile = useSelector((state) => state.empProfile);
