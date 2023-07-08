@@ -334,19 +334,21 @@ function EmpLeaves() {
             </tbody>
           </table>
           <div className="d-flex justify-content-between align-items-center pag_head">
-            <ReactPaginate
-              previousLabel={"Previous"}
-              nextLabel={"Next"}
-              pageCount={pageCount}
-              onPageChange={handlePageClick}
-              containerClassName={styles.pagination_ul}
-              previousLinkClassName={styles.paginationLink}
-              nextLinkClassName={styles.paginationLink}
-              disabledClassName={styles.paginationDisabled}
-              activeClassName={styles.paginationActive}
-              pageRangeDisplayed={2}
-              marginPagesDisplayed={1}
-            />
+            {report.length > 10 && (
+              <ReactPaginate
+                previousLabel={"Previous"}
+                nextLabel={"Next"}
+                pageCount={pageCount}
+                onPageChange={handlePageClick}
+                containerClassName={styles.pagination_ul}
+                previousLinkClassName={styles.paginationLink}
+                nextLinkClassName={styles.paginationLink}
+                disabledClassName={styles.paginationDisabled}
+                activeClassName={styles.paginationActive}
+                pageRangeDisplayed={2}
+                marginPagesDisplayed={1}
+              />
+            )}
             <div className="total_leave">
               Total result count: <span>{filteredList.length}</span>
             </div>
