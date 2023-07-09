@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 function Profile() {
   const dispatch = useDispatch();
   const adminProfile = useSelector((state) => state.adminProfile);
+  const serverURL = process.env.REACT_APP_SERVER_URL;
 
   // 👇️ create a ref for the file input
   const inputRef = useRef(null);
@@ -69,9 +70,7 @@ function Profile() {
   const handleDelete = async (id) => {
     try {
       setEditing(false);
-      const filteredDataRes = await axios.get(
-        "https://leave-monitoring.onrender.com/getusers"
-      );
+      const filteredDataRes = await axios.get(`${serverURL}/getusers`);
 
       const filteredData = filteredDataRes.data.filter(
         (obj) => obj.currentuserid === id
@@ -79,15 +78,13 @@ function Profile() {
 
       await Promise.all(
         filteredData.map((item) =>
-          axios.delete(
-            "https://leave-monitoring.onrender.com/delete/" + item._id
-          )
+          //axios.delete("http://localhost:8080/delete/" + item._id)
+          axios.delete(`${serverURL}/delete/${item._id}`)
         )
       );
 
-      await axios.delete(
-        "https://leave-monitoring.onrender.com/api/employeeinfo/delete/" + id
-      );
+      //  await axios.delete("http://localhost:8080/api/employeeinfo/delete/" + id);
+      await axios.delete(`${serverURL}/api/employeeinfo/delete/${id}`);
 
       setIsLoading(true);
       toast.info("Employee deleted successfully");
@@ -104,9 +101,7 @@ function Profile() {
   const updateEmpInfo = async (event) => {
     event.preventDefault();
     setIsLoadingSpinner(true);
-    const filteredDataRes = await axios.get(
-      "https://leave-monitoring.onrender.com/getusers"
-    );
+    const filteredDataRes = await axios.get(`${serverURL}/getusers`);
 
     const filteredData = filteredDataRes.data.filter(
       (obj) => obj.currentuserid === taskId
@@ -114,28 +109,24 @@ function Profile() {
 
     await Promise.all(
       filteredData.map((item) =>
-        axios.put("https://leave-monitoring.onrender.com/update/" + item._id, {
+        axios.put(`${serverURL}/update/${item._id}`, {
           name: name,
         })
       )
     );
     await axios
-      .put(
-        "https://leave-monitoring.onrender.com/api/employeeinfo/update/" +
-          taskId,
-        {
-          id: id,
-          name: name,
-          email: email,
-          password: password,
-          gender: gender,
-          designation: designation,
-          phone: phno,
-          joiningdate: joining,
-          dateofbirth: dob,
-          uploaded_file: profilepic,
-        }
-      )
+      .put(`${serverURL}/api/employeeinfo/update/${taskId}`, {
+        id: id,
+        name: name,
+        email: email,
+        password: password,
+        gender: gender,
+        designation: designation,
+        phone: phno,
+        joiningdate: joining,
+        dateofbirth: dob,
+        uploaded_file: profilepic,
+      })
       .then((response) => {
         // console.log(response.data);
         setIsLoading(true);
@@ -183,7 +174,7 @@ function Profile() {
     setIsLoadingSpinner(true);
     axios
       .post(
-        "https://leave-monitoring.onrender.com/api/employeeinfo/",
+        `${serverURL}/api/employeeinfo/`,
         {
           id: id,
           name: name,
@@ -236,7 +227,7 @@ function Profile() {
 
   useEffect(() => {
     axios
-      .get("https://leave-monitoring.onrender.com/api/employeeinfo/")
+      .get(`${serverURL}/api/employeeinfo/`)
       .then((res) => {
         let filteredArray = res.data.filter(function (obj) {
           return obj.isAdmin === false;
@@ -250,9 +241,10 @@ function Profile() {
           })
           .map(function (obj) {
             return obj._id;
-          });
+          })
+          .join("");
         dispatch(setEmpProfile(res.data));
-        setCurrentUser(JSON.stringify(currentUser));
+        setCurrentUser(currentUser);
         setIsLoading(false);
         setData(filteredArray);
         setDataAdmin(filteredArray2);
@@ -313,7 +305,7 @@ function Profile() {
   };
 
   /***************  Handle to edit employee information  *************/
-
+  console.log(currentUser.toString());
   return (
     <>
       <div className="sidebar">{adminProfile && <Header />}</div>
@@ -675,28 +667,6 @@ function Profile() {
                             <span className="small text-uppercase text-muted">
                               {user.designation}
                             </span>
-                            {/* <ul className="social mb-0 list-inline mt-3">
-                              <li className="list-inline-item">
-                                <a href="#test" className={styles.social_link}>
-                                  <i className="fa fa-facebook-f"></i>
-                                </a>
-                              </li>
-                              <li className="list-inline-item">
-                                <a href="#test" className={styles.social_link}>
-                                  <i className="fa fa-twitter"></i>
-                                </a>
-                              </li>
-                              <li className="list-inline-item">
-                                <a href="#test" className={styles.social_link}>
-                                  <i className="fa fa-instagram"></i>
-                                </a>
-                              </li>
-                              <li className="list-inline-item">
-                                <a href="#test" className={styles.social_link}>
-                                  <i className="fa fa-linkedin"></i>
-                                </a>
-                              </li>
-                            </ul> */}
 
                             <div className={styles.view_btn}>
                               <div

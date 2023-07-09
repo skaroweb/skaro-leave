@@ -5,14 +5,13 @@ const TodayEmpLeave = (props) => {
   const [array1, setArray1] = useState([]);
   const [array2, setArray2] = useState([]);
   const [matchingNames, setMatchingNames] = useState([]);
+  const serverURL = process.env.REACT_APP_SERVER_URL;
 
   useEffect(() => {
     // Simulated API fetch or data initialization
     const fetchData = async () => {
       // Fetch or set data for array1
-      const response1 = await fetch(
-        "https://leave-monitoring.onrender.com/api/employeeinfo/"
-      );
+      const response1 = await fetch(`${serverURL}/api/employeeinfo/`);
       const data1 = await response1.json();
 
       setArray1(data1);

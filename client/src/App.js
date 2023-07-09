@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 import { Route, Routes, Navigate } from "react-router-dom";
 
 import Main2 from "./components/Main/index2";
-import Signup from "./components/Signup";
+
 import Login from "./components/Login";
 
 import OverallReport from "./components/OverallReport";
@@ -13,7 +13,7 @@ import Profile from "./components/Profile";
 import ViewUserDetails from "./components/Singleprofile";
 import EmpLeaves from "./components/Singleprofile/empLeaves";
 import My404Component from "./components/404";
-import Contact from "./components/contact";
+
 import "./app.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdminProfile } from "./store/adminProfileSlice";
@@ -26,6 +26,7 @@ function App() {
 
   const dispatch = useDispatch();
   const adminProfile = useSelector((state) => state.adminProfile);
+  const serverURL = process.env.REACT_APP_SERVER_URL;
 
   // const [boxes, setBoxes] = useState([]);
   // const user = localStorage.getItem("token");
@@ -48,11 +49,9 @@ function App() {
       try {
         if (currentUserId) {
           const response = await axios.get(
-            `https://leave-monitoring.onrender.com/api/employeeinfo/${currentUserId}`
+            `${serverURL}/api/employeeinfo/${currentUserId}`
           );
-          const EmpAll = await axios.get(
-            `https://leave-monitoring.onrender.com/api/employeeinfo/`
-          );
+          const EmpAll = await axios.get(`${serverURL}/api/employeeinfo/`);
           const Admin = EmpAll.data
             .filter((currentValue) => {
               return currentValue.isAdmin === true;
@@ -84,7 +83,7 @@ function App() {
         {!email && (
           <Route path="/" element={<Navigate replace to="/login" />} />
         )}
-        <Route path="/signup" exact element={<Signup />} />
+
         <Route path="/login" exact element={<Login />} />
         {/* {email === admin && <Route path="/update" exact element={<Update />} />} */}
 
@@ -96,7 +95,6 @@ function App() {
           <Route exact path="/profile/:id" element={<ViewUserDetails />} />
         )}
         <Route exact path="/profile/:id/:id" element={<EmpLeaves />} />
-        <Route exact path="/contact" element={<Contact />} />
 
         <Route path="*" element={<My404Component />} />
       </Routes>

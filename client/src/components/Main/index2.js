@@ -14,6 +14,8 @@ import TodayEmpLeave from "./TodayEmpLeave";
 import UpcomingLeave from "./UpcomingLeave";
 import { useSelector } from "react-redux";
 
+const serverURL = process.env.REACT_APP_SERVER_URL;
+
 const Main2 = () => {
   const [listOfUsers, setListOfUsers] = useState([]);
 
@@ -64,7 +66,7 @@ const Main2 = () => {
 
   const updateUser2 = async () => {
     setIsLoading(true);
-    await axios.put("https://leave-monitoring.onrender.com/update/" + id, {
+    await axios.put(`${serverURL}/update/${id}`, {
       status: status,
     });
     if (status === "reject") return toast.warning("Leave Rejection");
@@ -86,7 +88,7 @@ const Main2 = () => {
 
   useEffect(() => {
     axios
-      .get("https://leave-monitoring.onrender.com/getusers")
+      .get(`${serverURL}/getusers`)
       .then((response) => {
         let filteredArray = response.data.filter(function (obj) {
           return obj.status === "pending";
@@ -122,7 +124,7 @@ const Main2 = () => {
 
   const createUser = () => {
     axios
-      .post("https://leave-monitoring.onrender.com/createuser", {
+      .post(`${serverURL}/createuser`, {
         name: adminProfile?.isAdmin === true ? name : adminProfile?.name,
         absencetype: absencetype,
         applydate: applydate,
@@ -156,7 +158,7 @@ const Main2 = () => {
   /************ Delete a existing Apply leave  **********/
   const handleDeleteLeave = (id) => {
     axios
-      .delete("https://leave-monitoring.onrender.com/delete/" + id)
+      .delete(`${serverURL}/delete/${id}`)
       .then((res) => {
         //console.log(res.data);
         setIsLoading(true);

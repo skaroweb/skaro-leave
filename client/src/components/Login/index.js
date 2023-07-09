@@ -8,6 +8,7 @@ import BgImage from "../../assets/img/illustrations/signin.svg";
 
 const Login = () => {
   const [data, setData] = useState({ email: "", password: "" });
+  const serverURL = process.env.REACT_APP_SERVER_URL;
   // const [error, setError] = useState("");
 
   const handleChange = ({ currentTarget: input }) => {
@@ -17,7 +18,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "https://leave-monitoring.onrender.com/api/auth";
+      const url = `${serverURL}/api/auth`;
       const getdata = await axios.post(url, data);
       console.log(getdata);
 

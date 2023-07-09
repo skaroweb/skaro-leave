@@ -10,13 +10,12 @@ const ViewUserDetails = () => {
   const [specificUser, setSpecificUser] = useState([]);
   const { id } = useParams();
   const adminProfile = useSelector((state) => state.adminProfile);
+  const serverURL = process.env.REACT_APP_SERVER_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://leave-monitoring.onrender.com/api/employeeinfo/${id}`
-        );
+        const response = await axios.get(`${serverURL}/api/employeeinfo/${id}`);
         const profile = await response.data;
 
         setSpecificUser(profile);

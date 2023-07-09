@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import "./EmpReport.css";
 const EmpReport = (props) => {
   return (

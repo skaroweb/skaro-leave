@@ -26,6 +26,7 @@ function EmpLeaves() {
     todate: "",
   });
   const adminProfile = useSelector((state) => state.adminProfile);
+  const serverURL = process.env.REACT_APP_SERVER_URL;
 
   const location = useLocation();
 
@@ -62,7 +63,7 @@ function EmpLeaves() {
 
   useEffect(() => {
     axios
-      .get("https://leave-monitoring.onrender.com/getusers")
+      .get(`${serverURL}/getusers`)
       .then((response) => {
         let filteredArray = response.data.filter(function (obj) {
           return obj.status !== "pending";

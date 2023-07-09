@@ -46,6 +46,7 @@ function OverallReport() {
   const [isLoading, setIsLoading] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: null, ascending: true });
   const [hide, setHide] = useState(false);
+  const serverURL = process.env.REACT_APP_SERVER_URL;
 
   // Pagination
   const PER_PAGE = 10;
@@ -82,7 +83,7 @@ function OverallReport() {
 
   useEffect(() => {
     axios
-      .get("https://leave-monitoring.onrender.com/api/employeeinfo/")
+      .get(`${serverURL}/api/employeeinfo/`)
       .then((res) => {
         setEmpProfile(res.data);
       })
@@ -91,7 +92,7 @@ function OverallReport() {
 
   useEffect(() => {
     axios
-      .get("https://leave-monitoring.onrender.com/getusers")
+      .get(`${serverURL}/getusers`)
       .then((response) => {
         setIsLoading(false);
         let filteredArray = response.data.filter(function (obj) {

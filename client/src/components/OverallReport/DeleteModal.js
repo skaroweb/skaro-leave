@@ -3,9 +3,11 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DeleteModal = ({ id, setIsLoading }) => {
+  const serverURL = process.env.REACT_APP_SERVER_URL;
+
   const deleteRecords = () => {
     axios
-      .delete("https://leave-monitoring.onrender.com/delete/" + id._id)
+      .delete(`${serverURL}/delete/${id._id}`)
       .then((res) => {
         setIsLoading(true);
         toast.info("Leave delete successfully");

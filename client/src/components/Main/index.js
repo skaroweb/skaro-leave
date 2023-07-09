@@ -48,7 +48,7 @@ const Main = () => {
 
   const createUser = () => {
     axios
-      .post("https://leave-monitoring.onrender.com/createuser", {
+      .post("http://localhost:8080/createuser", {
         name: adminProfile?.name,
         absencetype: absencetype,
         applydate: applydate,
@@ -74,7 +74,7 @@ const Main = () => {
 
   useEffect(() => {
     axios
-      .get("https://leave-monitoring.onrender.com/getusers")
+      .get("http://localhost:8080/getusers")
       .then((response) => {
         setIsLoading(false);
         let PendingUser = response.data.filter(function (obj) {
@@ -89,7 +89,7 @@ const Main = () => {
 
   const handleDeleteLeave = (id) => {
     axios
-      .delete("https://leave-monitoring.onrender.com/delete/" + id)
+      .delete("http://localhost:8080/delete/" + id)
       .then((res) => {
         //console.log(res.data);
         setIsLoading(true);

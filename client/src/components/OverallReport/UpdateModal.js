@@ -7,12 +7,13 @@ import "react-toastify/dist/ReactToastify.css";
 const UpdateModal = ({ id, setIsLoading }) => {
   const [applydate, setapplyDate] = useState("");
   const adminProfile = useSelector((state) => state.adminProfile);
+  const serverURL = process.env.REACT_APP_SERVER_URL;
   // new Date(id.applydate).toISOString().slice(0, 10)
 
   useEffect(() => {
     if (id && id._id) {
       axios
-        .get("https://leave-monitoring.onrender.com/getusers/" + id._id)
+        .get(`${serverURL}/getusers/${id._id}`)
         .then((res) => {
           setapplyDate(new Date(res.data.applydate).toISOString().slice(0, 10));
         })
@@ -22,7 +23,7 @@ const UpdateModal = ({ id, setIsLoading }) => {
 
   const updateRecords = () => {
     axios
-      .put("https://leave-monitoring.onrender.com/update/" + id._id, {
+      .put(`${serverURL}/update/${id._id}`, {
         currentuserid: adminProfile?._id,
         applydate: applydate,
       })
