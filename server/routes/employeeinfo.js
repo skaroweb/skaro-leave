@@ -120,9 +120,11 @@ router.use("/update/:id", async (req, res) => {
     // } else {
     //   await cloudinary.uploader.destroy(existingUser.cloudinary_id);
     // }
+
     const result = await cloudinary.uploader.upload(req.body.uploaded_file, {
       folder: "profile",
     });
+
     const employeeinfo = await employeeinfoModel.findByIdAndUpdate(
       req.params.id,
       {
@@ -148,6 +150,8 @@ router.use("/update/:id", async (req, res) => {
 
 router.use("/delete/:id", async (req, res) => {
   try {
+    const existingUser = await employeeinfoModel.findById(req.params.id);
+    await cloudinary.uploader.destroy(existingUser.cloudinary_id);
     const employeeinfo = await employeeinfoModel.findByIdAndDelete(
       req.params.id
     );
