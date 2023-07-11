@@ -130,10 +130,7 @@ const Main2 = () => {
         applydate: applydate,
         // currentuserid: adminProfile?.isAdmin === true ? id : adminProfile._id,
         currentuserid: id,
-        status:
-          adminProfile?.isAdmin === true && adminProfile?._id === id
-            ? "approve"
-            : "pending",
+        status: adminProfile?.isAdmin === true ? "approve" : "pending",
       })
       .then((response) => {
         setIsLoading(true);
