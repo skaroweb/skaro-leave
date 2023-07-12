@@ -335,7 +335,7 @@ function EmpLeaves() {
             </tbody>
           </table>
           <div className="d-flex justify-content-between align-items-center pag_head">
-            {report.length > 10 && (
+            {filteredList.length > 10 && (
               <ReactPaginate
                 previousLabel={"Previous"}
                 nextLabel={"Next"}
