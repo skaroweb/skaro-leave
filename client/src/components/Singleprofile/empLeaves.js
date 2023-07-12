@@ -31,7 +31,7 @@ function EmpLeaves() {
   const location = useLocation();
 
   // Pagination
-  const PER_PAGE = 5;
+  const PER_PAGE = 10;
   const pageCount = Math.ceil(filteredList.length / PER_PAGE);
   function handlePageClick({ selected: selectedPage }) {
     setCurrentPage(selectedPage);
