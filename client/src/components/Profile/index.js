@@ -295,6 +295,7 @@ function Profile() {
     setName(user.name);
     setEmail(user.email);
     setPassword("");
+
     setGender(user.gender);
     setDesignation(user.designation);
     setPhno(user.phone);
@@ -305,7 +306,7 @@ function Profile() {
   };
 
   /***************  Handle to edit employee information  *************/
-  console.log(currentUser.toString());
+  //console.log(currentUser.toString());
   return (
     <>
       <div className="sidebar">{adminProfile && <Header />}</div>
