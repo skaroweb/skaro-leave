@@ -302,6 +302,7 @@ const Main2 = () => {
                               <option value="holiday">Public Holiday</option>
                               <option value="out">Out of Office</option>
                               <option value="offset">Offset Leave</option>
+                              <option value="half">Halfday Leave</option>
                             </select>
                           </div>
                         </div>

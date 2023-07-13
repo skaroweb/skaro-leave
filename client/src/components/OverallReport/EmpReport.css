@@ -18,7 +18,7 @@
 
 .sub-leave {
   display: flex;
-  width: 460px;
+  width: 100%;
   color: #000 !important;
   padding: 10px;
 }

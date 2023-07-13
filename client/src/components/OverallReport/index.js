@@ -102,16 +102,28 @@ function OverallReport() {
         let leave_count = filteredArray.filter(function (obj) {
           return obj.status === "approve";
         });
+
         setCountLeave(leave_count);
+
         setReport(
           filteredArray.reverse().sort((a, b) => a.name.localeCompare(b.name))
         );
         const result = filteredArray.reduce((acc, cur) => {
-          const { currentuserid } = cur;
-          if (currentuserid in acc) {
-            acc[currentuserid]++;
-          } else {
-            acc[currentuserid] = 1;
+          const { currentuserid, absencetype, status } = cur;
+          if (status === "approve") {
+            if (currentuserid in acc) {
+              acc[currentuserid]++;
+            } else {
+              acc[currentuserid] = 1;
+            }
+          }
+
+          if (absencetype === "half" && status !== "reject") {
+            if (currentuserid in acc) {
+              acc[currentuserid] -= 0.5;
+            } else {
+              acc[currentuserid] = -0.5;
+            }
           }
 
           return acc;
@@ -122,9 +134,14 @@ function OverallReport() {
         for (const id in result) {
           const count = result[id];
           const profile = empProfile.find((profile) => profile._id === id);
+
+          let withoutSatReject = filteredArray.filter(function (obj) {
+            return obj.absencetype === "half" && obj.status !== "reject";
+          });
+          console.log(withoutSatReject);
           if (profile) {
             idToNameMap[id] = {
-              count,
+              count: count,
               name: profile.name,
             };
           }
@@ -292,6 +309,14 @@ function OverallReport() {
     report,
   ]);
 
+  let withoutSat = filteredList.filter(function (obj) {
+    return obj.absencetype === "half";
+  });
+  let withoutSatReject = filteredList.filter(function (obj) {
+    return obj.absencetype === "half" && obj.status !== "reject";
+  });
+
+  // console.log(filteredList.length - withoutSat.length + withoutSat.length / 2);
   // var monthNames = [
   //   "January",
   //   "February",
@@ -518,17 +543,23 @@ function OverallReport() {
               {!hide && (
                 <>
                   <div className="total_leave">
-                    Total Applied Leave : <span>{report.length}</span>
+                    Total Applied Leave :{" "}
+                    <span>{report.length - withoutSat.length / 2}</span>
                   </div>
                   <div className="total_leave">
-                    Total Approved Leave : <span>{countLeave.length}</span>
+                    Total Approved Leave :{" "}
+                    <span>
+                      {countLeave.length - withoutSatReject.length / 2}
+                    </span>
                   </div>
                 </>
               )}
-
-              <div className="total_leave">
-                Total filtered Leave count: <span>{filteredList.length}</span>
-              </div>
+              {hide && (
+                <div className="total_leave">
+                  Total filtered Leave count:{" "}
+                  <span>{filteredList.length - withoutSat.length / 2}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -538,7 +569,10 @@ function OverallReport() {
           </h2>
           <div className="emp_leave_list">
             <EmpLeaveChart leaveCountName={leaveCountName} />
-            <EmpReport leaveCountName={leaveCountName} />
+            <EmpReport
+              leaveCountName={leaveCountName}
+              count={filteredList.length - withoutSatReject.length / 2}
+            />
           </div>
         </>
       </div>
