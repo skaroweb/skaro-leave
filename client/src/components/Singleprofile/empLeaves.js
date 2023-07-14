@@ -216,7 +216,7 @@ function EmpLeaves() {
   const years = Array.from(new Array(20), (val, index) => index + year);
 
   let withoutSat = filteredList.filter(function (obj) {
-    return obj.absencetype === "halfday";
+    return obj.absencetype === "half day";
   });
   return (
     <>

@@ -299,10 +299,12 @@ const Main2 = () => {
                               <option value="paid">Paid Leave</option>
                               <option value="unpaid">Unpaid Leave</option>
                               <option value="vacation">Vacation Leave</option>
-                              <option value="holiday">Public Holiday</option>
+                              <option value="public holiday">
+                                Public Holiday
+                              </option>
                               <option value="out">Out of Office</option>
                               <option value="offset">Offset Leave</option>
-                              <option value="halfday">Halfday Leave</option>
+                              <option value="half day">Half day Leave</option>
                             </select>
                           </div>
                         </div>
