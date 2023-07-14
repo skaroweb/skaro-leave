@@ -285,6 +285,7 @@ function OverallReport() {
     setSelectedYear("");
     setSelectedMonth("");
     setCurrentPage(0);
+
     setSelectedStatus("");
     setSelectedDate({
       fromdate: "",
@@ -532,6 +533,7 @@ function OverallReport() {
                 activeClassName={styles.paginationActive}
                 pageRangeDisplayed={2}
                 marginPagesDisplayed={1}
+                forcePage={currentPage} // Set the active page
               />
             )}
             {/* <span>
