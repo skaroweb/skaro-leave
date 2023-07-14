@@ -286,24 +286,36 @@ const Main2 = () => {
                             >
                               <option selected="">Select absence type</option>
                               <option value="conference">Conference</option>
-                              <option value="parental">Parental Leave</option>
-                              <option value="maternity">Maternity Leave</option>
-                              <option value="paternity">Paternity Leave</option>
-                              <option value="bereavement">
+                              <option value="parental leave">
+                                Parental Leave
+                              </option>
+                              <option value="maternity leave">
+                                Maternity Leave
+                              </option>
+                              <option value="paternity leave">
+                                Paternity Leave
+                              </option>
+                              <option value="bereavement leave">
                                 Bereavement Leave
                               </option>
-                              <option value="emergency">Emergency Leave</option>
-                              <option value="rest">Rest Day</option>
-                              <option value="sick">Sick Leave</option>
-                              <option value="trip">Business Trip</option>
-                              <option value="paid">Paid Leave</option>
-                              <option value="unpaid">Unpaid Leave</option>
+                              <option value="emergency leave">
+                                Emergency Leave
+                              </option>
+                              <option value="rest day">Rest Day</option>
+                              <option value="sick leave">Sick Leave</option>
+                              <option value="business trip">
+                                Business Trip
+                              </option>
+                              <option value="paid leave">Paid Leave</option>
+                              <option value="unpaid leave">Unpaid Leave</option>
                               <option value="vacation">Vacation Leave</option>
                               <option value="public holiday">
                                 Public Holiday
                               </option>
-                              <option value="out">Out of Office</option>
-                              <option value="offset">Offset Leave</option>
+                              <option value="out of office">
+                                Out of Office
+                              </option>
+                              <option value="offset leave">Offset Leave</option>
                               <option value="half day">Half day Leave</option>
                             </select>
                           </div>
