@@ -118,7 +118,7 @@ function OverallReport() {
             }
           }
 
-          if (absencetype === "half" && status !== "reject") {
+          if (absencetype === "halfday" && status !== "reject") {
             if (currentuserid in acc) {
               acc[currentuserid] -= 0.5;
             } else {
@@ -135,10 +135,10 @@ function OverallReport() {
           const count = result[id];
           const profile = empProfile.find((profile) => profile._id === id);
 
-          let withoutSatReject = filteredArray.filter(function (obj) {
-            return obj.absencetype === "half" && obj.status !== "reject";
-          });
-          console.log(withoutSatReject);
+          // let withoutSatReject = filteredArray.filter(function (obj) {
+          //   return obj.absencetype === "halfday" && obj.status !== "reject";
+          // });
+          // console.log(withoutSatReject);
           if (profile) {
             idToNameMap[id] = {
               count: count,
@@ -310,10 +310,10 @@ function OverallReport() {
   ]);
 
   let withoutSat = filteredList.filter(function (obj) {
-    return obj.absencetype === "half";
+    return obj.absencetype === "halfday";
   });
   let withoutSatReject = filteredList.filter(function (obj) {
-    return obj.absencetype === "half" && obj.status !== "reject";
+    return obj.absencetype === "halfday" && obj.status !== "reject";
   });
 
   // console.log(filteredList.length - withoutSat.length + withoutSat.length / 2);

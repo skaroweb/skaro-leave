@@ -302,7 +302,7 @@ const Main2 = () => {
                               <option value="holiday">Public Holiday</option>
                               <option value="out">Out of Office</option>
                               <option value="offset">Offset Leave</option>
-                              <option value="half">Halfday Leave</option>
+                              <option value="halfday">Halfday Leave</option>
                             </select>
                           </div>
                         </div>
@@ -365,80 +365,91 @@ const Main2 = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredListOfUsers.map((user, index) => {
-                      return (
-                        <tr key={index}>
-                          <td>
-                            {new Date(user.createdAt).toLocaleString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </td>
-                          <td>{user.name}</td>
+                    {filteredListOfUsers.length > 0 ? (
+                      filteredListOfUsers.map((user, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>
+                              {new Date(user.createdAt).toLocaleString(
+                                "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                }
+                              )}
+                            </td>
+                            <td>{user.name}</td>
 
-                          <td>
-                            {new Date(user.applydate) <=
-                            oneWeekAfterCurrentDate ? (
-                              <span>
-                                <OverlayTrigger
-                                  overlay={
-                                    <Tooltip className="m-0">
-                                      Apply date didn't apply a week ago
-                                    </Tooltip>
-                                  }
-                                >
+                            <td>
+                              {new Date(user.applydate) <=
+                              oneWeekAfterCurrentDate ? (
+                                <span>
+                                  <OverlayTrigger
+                                    overlay={
+                                      <Tooltip className="m-0">
+                                        Apply date didn't apply a week ago
+                                      </Tooltip>
+                                    }
+                                  >
+                                    <i
+                                      className="fa fa-exclamation-triangle text-danger"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </OverlayTrigger>
+                                </span>
+                              ) : (
+                                <span>
                                   <i
-                                    className="fa fa-exclamation-triangle text-danger"
+                                    className="fa fa-check-square text-success"
                                     aria-hidden="true"
                                   ></i>
-                                </OverlayTrigger>
-                              </span>
-                            ) : (
-                              <span>
-                                <i
-                                  className="fa fa-check-square text-success"
-                                  aria-hidden="true"
-                                ></i>
-                              </span>
-                            )}
-                            {new Date(user.applydate).toLocaleDateString(
-                              "en-US",
-                              {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              }
-                            )}
-                          </td>
-                          <td className="text-warning">{user.status}</td>
-                          <td>{user.absencetype}</td>
-                          <td>
-                            {adminProfile?.isAdmin === true ? (
-                              <button
-                                className="update_btn"
-                                data-bs-toggle="modal"
-                                data-bs-target="#myModal2"
-                                onClick={() => {
-                                  updateUser(user);
-                                }}
-                              >
-                                Update
-                              </button>
-                            ) : (
-                              <button
-                                className="update_btn"
-                                onClick={() => {
-                                  handleDeleteLeave(user._id);
-                                }}
-                              >
-                                delete
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
+                                </span>
+                              )}
+                              {new Date(user.applydate).toLocaleDateString(
+                                "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                }
+                              )}
+                            </td>
+                            <td className="text-warning">{user.status}</td>
+                            <td>{user.absencetype}</td>
+                            <td>
+                              {adminProfile?.isAdmin === true ? (
+                                <button
+                                  className="update_btn"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#myModal2"
+                                  onClick={() => {
+                                    updateUser(user);
+                                  }}
+                                >
+                                  Update
+                                </button>
+                              ) : (
+                                <button
+                                  className="update_btn"
+                                  onClick={() => {
+                                    handleDeleteLeave(user._id);
+                                  }}
+                                >
+                                  delete
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <img
+                        src="https://res.cloudinary.com/dmkttselw/image/upload/v1689268120/profile/Nodata_czp0rb.png"
+                        alt="nodata"
+                        className="img-fluid nofound"
+                      />
+                    )}
                   </tbody>
                 </table>
               </div>

@@ -214,6 +214,10 @@ function EmpLeaves() {
   ];
   const year = new Date().getFullYear();
   const years = Array.from(new Array(20), (val, index) => index + year);
+
+  let withoutSat = filteredList.filter(function (obj) {
+    return obj.absencetype === "halfday";
+  });
   return (
     <>
       <div className="sidebar">{adminProfile && <Header />}</div>
@@ -351,7 +355,8 @@ function EmpLeaves() {
               />
             )}
             <div className="total_leave">
-              Total result count: <span>{filteredList.length}</span>
+              Total result count:{" "}
+              <span>{filteredList.length - withoutSat.length / 2}</span>
             </div>
           </div>
         </div>

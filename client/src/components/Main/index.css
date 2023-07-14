@@ -63,6 +63,14 @@ td.text-success {
 .card .table td > span {
   margin-right: 8px;
 }
+.nofound {
+  width: 500px;
+  position: absolute;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+}
 @media (max-width: 768px) {
   .dashboard {
     overflow-x: auto;
