@@ -79,6 +79,9 @@
 .leaderboard__picture {
   max-width: 100%;
   width: 60px;
+  height: 60px;
+  object-fit: cover;
+  object-position: top;
   border-radius: 50%;
   box-shadow: 0 0 0 10px #ebeef3, 0 0 0 22px #f3f4f6;
 }

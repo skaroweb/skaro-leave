@@ -13,7 +13,7 @@ const exportToExcel = (data) => {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   });
 
-  saveAs(excelBlob, "data.xlsx");
+  saveAs(excelBlob, "Employee-attendance-data.xlsx");
 };
 const ExcelReport = (props) => {
   const jsonData = props.items;
