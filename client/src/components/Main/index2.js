@@ -176,6 +176,17 @@ const Main2 = () => {
       ? listOfUsers.filter((obj) => obj.currentuserid === adminProfile?._id)
       : listOfUsers;
   // console.log({ test });
+
+  const calculateOneWeekLater = (apply) => {
+    const oneWeekLater = new Date(apply);
+    oneWeekLater.setDate(oneWeekLater.getDate() + 7);
+    return oneWeekLater.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   return (
     <>
       <div className="sidebar">{adminProfile && <Header />}</div>
@@ -396,8 +407,14 @@ const Main2 = () => {
                             <td>{user.name}</td>
 
                             <td>
-                              {new Date(user.applydate) <=
-                              oneWeekAfterCurrentDate ? (
+                              {new Date(user.applydate).toLocaleString(
+                                "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                }
+                              ) <= calculateOneWeekLater(user.createdAt) ? (
                                 <span>
                                   <OverlayTrigger
                                     overlay={
@@ -414,10 +431,18 @@ const Main2 = () => {
                                 </span>
                               ) : (
                                 <span>
-                                  <i
-                                    className="fa fa-check-square text-success"
-                                    aria-hidden="true"
-                                  ></i>
+                                  <OverlayTrigger
+                                    overlay={
+                                      <Tooltip className="m-0">
+                                        Apply date applied a week ago
+                                      </Tooltip>
+                                    }
+                                  >
+                                    <i
+                                      className="fa fa-check-square text-success"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </OverlayTrigger>
                                 </span>
                               )}
                               {new Date(user.applydate).toLocaleDateString(
