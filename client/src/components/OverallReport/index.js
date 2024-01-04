@@ -32,7 +32,7 @@ function OverallReport() {
   // Selected Month filter
   const [selectedMonth, setSelectedMonth] = useState("");
   // Selected Year filter
-  const [selectedYear, setSelectedYear] = useState();
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   const [selectedStatus, setSelectedStatus] = useState("");
 
@@ -95,18 +95,23 @@ function OverallReport() {
       .get(`${serverURL}/getusers`)
       .then((response) => {
         setIsLoading(false);
+        const currentYear = new Date().getFullYear();
+
         let filteredArray = response.data.filter(function (obj) {
-          return obj.status !== "pending";
+          // Check if the status is not "pending" and the applydate is in the current year
+          const applyDateYear = new Date(obj.applydate).getFullYear();
+          return obj.status !== "pending" && applyDateYear === currentYear;
         });
 
         let leave_count = filteredArray.filter(function (obj) {
           return obj.status === "approve";
         });
-
+        console.log(leave_count);
         setCountLeave(leave_count);
 
         setReport(
-          filteredArray.reverse().sort((a, b) => a.name.localeCompare(b.name))
+          //  filteredArray.reverse().sort((a, b) => a.name.localeCompare(b.name))
+          filteredArray.reverse()
         );
         const result = filteredArray.reduce((acc, cur) => {
           const { currentuserid, absencetype, status } = cur;
@@ -260,16 +265,16 @@ function OverallReport() {
     setSelectedStatus(event.target.value);
   };
 
-  // Toggle seletedYear state
-  // const handleYearChange = (event) => {
-  //   const inputYear = Number(event.target.value);
+  //Toggle seletedYear state
+  const handleYearChange = (event) => {
+    const inputYear = Number(event.target.value);
 
-  //   if (inputYear === selectedYear) {
-  //     setSelectedYear("");
-  //   } else {
-  //     setSelectedYear(inputYear);
-  //   }
-  // };
+    if (inputYear === selectedYear) {
+      setSelectedYear("");
+    } else {
+      setSelectedYear(inputYear);
+    }
+  };
 
   const handleDateChange = (event) => {
     const { name, value } = event.target;
@@ -335,6 +340,16 @@ function OverallReport() {
   // const year = new Date().getFullYear();
   // const years = Array.from(new Array(20), (val, index) => index + year);
 
+  const uniqueYears = new Set();
+
+  report.forEach((data) => {
+    const applyDate = new Date(data.applydate);
+    const year = applyDate.getFullYear();
+    uniqueYears.add(year);
+  });
+
+  const arrayOfUniqueYears = Array.from(uniqueYears);
+
   return (
     <>
       <div className="sidebar">{adminProfile && <Header />}</div>
@@ -356,7 +371,7 @@ function OverallReport() {
                 <option value="reject">Reject</option>
               </select>
             </div>
-            {/* <div className="filter-year">
+            <div className="filter-year">
               <label>Filter by year :</label>
               <select
                 className="fmxw-200 d-md-inline form-select"
@@ -364,14 +379,14 @@ function OverallReport() {
                 onChange={handleYearChange}
               >
                 <option value="">All</option>
-                {years.map((key, index) => (
+                {arrayOfUniqueYears.map((key, index) => (
                   <option key={index} value={key}>
                     {key}
                   </option>
                 ))}
               </select>
             </div>
-            <div className="filter-month">
+            {/*   <div className="filter-month">
               <label>Filter by Month :</label>
               <select
                 className="fmxw-200 d-md-inline form-select"

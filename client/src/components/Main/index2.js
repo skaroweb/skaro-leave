@@ -187,6 +187,20 @@ const Main2 = () => {
     });
   };
 
+  const calculateDaysDifference = (createdAt, applyDate) => {
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+    const createdAtDate = new Date(createdAt);
+    const applyDateDate = new Date(applyDate);
+
+    const differenceInDays = Math.round(
+      Math.abs((createdAtDate - applyDateDate) / oneDayInMilliseconds)
+    );
+
+    return differenceInDays;
+  };
+
+  console.log(filteredListOfUsers);
+
   return (
     <>
       <div className="sidebar">{adminProfile && <Header />}</div>
@@ -405,16 +419,15 @@ const Main2 = () => {
                               )}
                             </td>
                             <td>{user.name}</td>
-
+                            {calculateDaysDifference(
+                              user.createdAt,
+                              user.applydate
+                            )}
                             <td>
-                              {new Date(user.applydate).toLocaleString(
-                                "en-US",
-                                {
-                                  year: "numeric",
-                                  month: "long",
-                                  day: "numeric",
-                                }
-                              ) <= calculateOneWeekLater(user.createdAt) ? (
+                              {calculateDaysDifference(
+                                user.createdAt,
+                                user.applydate
+                              ) < 7 ? (
                                 <span>
                                   <OverlayTrigger
                                     overlay={
