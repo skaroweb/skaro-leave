@@ -111,17 +111,26 @@ function OverallReport() {
         let leave_count = filteredArray.filter(function (obj) {
           return obj.status === "approve";
         });
-        // console.log(leave_count);
+
         setCountLeave(leave_count);
 
         setReport(
           //  filteredArray.reverse().sort((a, b) => a.name.localeCompare(b.name))
           filteredArray.reverse()
         );
-        const result = filteredArray
-          .filter(
+
+        let filteredResult = filteredArray;
+
+        if (selectedYear !== 0) {
+          filteredResult = filteredResult.filter(
             (obj) => new Date(obj.applydate).getFullYear() === selectedYear
-          )
+          );
+        }
+        console.log(filteredResult);
+        const result = filteredResult
+          // .filter(
+          //   (obj) => new Date(obj.applydate).getFullYear() === selectedYear
+          // )
           .reduce((acc, cur) => {
             const { currentuserid, absencetype, status } = cur;
             if (status === "approve") {
@@ -358,7 +367,15 @@ function OverallReport() {
   });
 
   const arrayOfUniqueYears = Array.from(uniqueYears).sort((a, b) => a - b);
-  console.log(arrayOfUniqueYears);
+
+  let totalCount = 0;
+
+  for (const key in leaveCountName) {
+    if (leaveCountName.hasOwnProperty(key)) {
+      totalCount += leaveCountName[key].count;
+    }
+  }
+  console.log(filteredList);
 
   return (
     <>
@@ -569,14 +586,15 @@ function OverallReport() {
             <div className="total_leave_detail">
               {!hide && (
                 <>
-                  <div className="total_leave">
+                  {/* <div className="total_leave">
                     Total Applied Leave :{" "}
                     <span>{report.length - withoutSat.length / 2}</span>
-                  </div>
+                  </div> */}
                   <div className="total_leave">
                     Total Approved Leave :{" "}
                     <span>
-                      {countLeave.length - withoutSatReject.length / 2}
+                      {/* {countLeave.length - withoutSatReject.length / 2} */}
+                      {totalCount}
                     </span>
                   </div>
                 </>
