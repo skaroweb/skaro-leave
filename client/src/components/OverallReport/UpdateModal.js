@@ -22,9 +22,10 @@ const UpdateModal = ({ id, setIsLoading }) => {
   }, [id]);
 
   const updateRecords = () => {
+    // console.log(id.currentuserid);
     axios
       .put(`${serverURL}/update/${id._id}`, {
-        currentuserid: adminProfile?._id,
+        currentuserid: id.currentuserid,
         applydate: applydate,
       })
       .then((res) => {
