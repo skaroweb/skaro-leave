@@ -95,44 +95,53 @@ function OverallReport() {
       .get(`${serverURL}/getusers`)
       .then((response) => {
         setIsLoading(false);
-        const currentYear = new Date().getFullYear();
+        // const currentYear = new Date().getFullYear();
+
+        // let filteredArray = response.data.filter(function (obj) {
+        //   // Check if the status is not "pending" and the applydate is in the current year
+        //   const applyDateYear = new Date(obj.applydate).getFullYear();
+        //   return obj.status !== "pending" && applyDateYear === currentYear;
+        // });
 
         let filteredArray = response.data.filter(function (obj) {
           // Check if the status is not "pending" and the applydate is in the current year
-          const applyDateYear = new Date(obj.applydate).getFullYear();
-          return obj.status !== "pending" && applyDateYear === currentYear;
+          return obj.status !== "pending";
         });
 
         let leave_count = filteredArray.filter(function (obj) {
           return obj.status === "approve";
         });
-        console.log(leave_count);
+        // console.log(leave_count);
         setCountLeave(leave_count);
 
         setReport(
           //  filteredArray.reverse().sort((a, b) => a.name.localeCompare(b.name))
           filteredArray.reverse()
         );
-        const result = filteredArray.reduce((acc, cur) => {
-          const { currentuserid, absencetype, status } = cur;
-          if (status === "approve") {
-            if (currentuserid in acc) {
-              acc[currentuserid]++;
-            } else {
-              acc[currentuserid] = 1;
+        const result = filteredArray
+          .filter(
+            (obj) => new Date(obj.applydate).getFullYear() === selectedYear
+          )
+          .reduce((acc, cur) => {
+            const { currentuserid, absencetype, status } = cur;
+            if (status === "approve") {
+              if (currentuserid in acc) {
+                acc[currentuserid]++;
+              } else {
+                acc[currentuserid] = 1;
+              }
             }
-          }
 
-          if (absencetype === "half day" && status !== "reject") {
-            if (currentuserid in acc) {
-              acc[currentuserid] -= 0.5;
-            } else {
-              acc[currentuserid] = -0.5;
+            if (absencetype === "half day" && status !== "reject") {
+              if (currentuserid in acc) {
+                acc[currentuserid] -= 0.5;
+              } else {
+                acc[currentuserid] = -0.5;
+              }
             }
-          }
 
-          return acc;
-        }, {});
+            return acc;
+          }, {});
 
         const idToNameMap = {};
 
@@ -157,7 +166,7 @@ function OverallReport() {
       .catch((err) => {
         console.log(err);
       });
-  }, [empProfile, isLoading]);
+  }, [empProfile, isLoading, selectedYear]);
 
   /*******  For Employee leave get by the id and compare into Emp Profile name ********/
 
@@ -348,7 +357,8 @@ function OverallReport() {
     uniqueYears.add(year);
   });
 
-  const arrayOfUniqueYears = Array.from(uniqueYears);
+  const arrayOfUniqueYears = Array.from(uniqueYears).sort((a, b) => a - b);
+  console.log(arrayOfUniqueYears);
 
   return (
     <>
