@@ -419,10 +419,7 @@ const Main2 = () => {
                               )}
                             </td>
                             <td>{user.name}</td>
-                            {calculateDaysDifference(
-                              user.createdAt,
-                              user.applydate
-                            )}
+
                             <td>
                               {calculateDaysDifference(
                                 user.createdAt,
