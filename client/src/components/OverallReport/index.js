@@ -497,8 +497,8 @@ function OverallReport() {
                       onClick={() => handleSort("date")}
                     ></i>
                   </th>
-                  <th>status</th>
                   <th>Absence type </th>
+                  <th>status</th>
                   <th>Action</th>
                 </tr>
               </thead>
