@@ -18,6 +18,7 @@ import "./app.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdminProfile } from "./store/adminProfileSlice";
 import { setEmpProfile } from "./store/empProfileSlice";
+import WFH from "./components/WFH";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -89,6 +90,9 @@ function App() {
 
         {email === adminProfile?.email && (
           <Route exact path="/overall-report" element={<OverallReport />} />
+        )}
+        {email === adminProfile?.email && (
+          <Route exact path="/wfh" element={<WFH />} />
         )}
         <Route path="/profile" exact element={<Profile />} />
         {email && (

@@ -53,6 +53,10 @@ const employeeinfoSchema = new Schema(
     cloudinary_id: {
       type: String,
     },
+    profilestatus: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -78,6 +82,7 @@ const validate = (data) => {
     joiningdate: Joi.date().required().label("Joining Date"),
     dateofbirth: Joi.date().required().label("Date of Birth"),
     uploaded_file: Joi.string().required().label("Profile Photo"),
+    profilestatus: Joi.string().required().label("profile status"),
   });
 
   return schema.validate(data);

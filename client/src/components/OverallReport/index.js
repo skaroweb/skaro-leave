@@ -105,7 +105,19 @@ function OverallReport() {
 
         let filteredArray = response.data.filter(function (obj) {
           // Check if the status is not "pending" and the applydate is in the current year
-          return obj.status !== "pending";
+
+          // return obj.status !== "pending" && obj.reason !== "WFH";
+          const profile = empProfile.find(
+            (profile) => profile._id === obj.currentuserid
+          );
+          // Check if the profile exists and if its status is "active"
+          return (
+            profile &&
+            profile.profilestatus === "Active" &&
+            profile._id === obj.currentuserid &&
+            obj.status !== "pending" &&
+            obj.reason !== "WFH"
+          );
         });
 
         let leave_count = filteredArray.filter(function (obj) {
@@ -126,7 +138,7 @@ function OverallReport() {
             (obj) => new Date(obj.applydate).getFullYear() === selectedYear
           );
         }
-        console.log(filteredResult);
+
         const result = filteredResult
           // .filter(
           //   (obj) => new Date(obj.applydate).getFullYear() === selectedYear
@@ -375,7 +387,7 @@ function OverallReport() {
       totalCount += leaveCountName[key].count;
     }
   }
-  console.log(filteredList);
+  // console.log(filteredList);
 
   return (
     <>

@@ -23,6 +23,9 @@ const Main2 = () => {
   const [name, setName] = useState("");
   const [status, setStatus] = useState("");
   const [applydate, setapplyDate] = useState("");
+  const [permissionTime, setPermissionTime] = useState();
+  const [workfromhome, setWorkfromhome] = useState();
+  const [reason, setReason] = useState([]);
   const [absencetype, setAbsencetype] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -128,13 +131,20 @@ const Main2 = () => {
         name: adminProfile?.isAdmin === true ? name : adminProfile?.name,
         absencetype: absencetype,
         applydate: applydate,
+        reason: reason,
+        permissionTime: permissionTime,
+        workFromHome: workfromhome,
         // currentuserid: adminProfile?.isAdmin === true ? id : adminProfile._id,
         currentuserid: id,
         status: adminProfile?.isAdmin === true ? "approve" : "pending",
       })
       .then((response) => {
+        console.log(response.data);
         setIsLoading(true);
         setAbsencetype([]);
+        setReason();
+        setPermissionTime();
+        setWorkfromhome();
         setapplyDate([]);
         toast.success("Leave applied successfully");
       })
@@ -199,7 +209,7 @@ const Main2 = () => {
     return differenceInDays;
   };
 
-  console.log(filteredListOfUsers);
+  //  console.log(filteredListOfUsers);
 
   return (
     <>
@@ -219,13 +229,13 @@ const Main2 = () => {
           data-bs-target="#myModal"
         >
           <i className="fa fa-plus" aria-hidden="true"></i>
-          Apply Leave
+          Apply
         </button>
         <div className="modal fade" id="myModal">
           <div className="modal-dialog modal-dialog-centered modal-xs">
             <div className="modal-content">
               <div className="modal-header">
-                <h4 className="modal-title text-center">Apply Leave</h4>
+                <h4 className="modal-title text-center">Apply</h4>
                 <button
                   onClick={clear}
                   type="button"
@@ -295,57 +305,152 @@ const Main2 = () => {
                         </div>
                       </div>
                       <div className="row">
-                        <div className="mb-3 col-md-12">
-                          <div id="firstName">
-                            <label className="form-label">
-                              Reason For Leave
-                            </label>
-                            <select
-                              className="form-select"
-                              id="type"
-                              name="type"
-                              onChange={(event) => {
-                                setAbsencetype(event.target.value);
-                              }}
-                              value={absencetype}
-                            >
-                              <option selected="">Select absence type</option>
-                              <option value="conference">Conference</option>
-                              <option value="parental leave">
-                                Parental Leave
-                              </option>
-                              <option value="maternity leave">
-                                Maternity Leave
-                              </option>
-                              <option value="paternity leave">
-                                Paternity Leave
-                              </option>
-                              <option value="bereavement leave">
-                                Bereavement Leave
-                              </option>
-                              <option value="emergency leave">
-                                Emergency Leave
-                              </option>
-                              <option value="rest day">Rest Day</option>
-                              <option value="sick leave">Sick Leave</option>
-                              <option value="business trip">
-                                Business Trip
-                              </option>
-                              <option value="paid leave">Paid Leave</option>
-                              <option value="unpaid leave">Unpaid Leave</option>
-                              <option value="vacation">Vacation Leave</option>
-                              <option value="public holiday">
-                                Public Holiday
-                              </option>
-                              <option value="out of office">
-                                Out of Office
-                              </option>
-                              <option value="offset leave">Offset Leave</option>
-                              <option value="half day">Half day Leave</option>
-                            </select>
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">Reason Type</label>
+                          <div className="Profile_radio_input__DcU0C">
+                            <div className="form-check">
+                              <input
+                                className="form-check-input"
+                                type="radio"
+                                checked={reason === "Leave"}
+                                name="Reason"
+                                onChange={() => {
+                                  setReason("Leave");
+                                  setWorkfromhome();
+                                  setAbsencetype();
+                                  setPermissionTime();
+                                }}
+                                id="Leave"
+                                value="Leave"
+                              />
+                              <label
+                                className="form-check-label"
+                                htmlFor="Leave"
+                              >
+                                Leave
+                              </label>
+                            </div>
+                            <div className="form-check">
+                              <input
+                                className="form-check-input"
+                                type="radio"
+                                checked={reason === "WFH"}
+                                name="Reason"
+                                onChange={() => {
+                                  setReason("WFH");
+                                  setWorkfromhome("WFH");
+                                  setAbsencetype();
+                                  setPermissionTime();
+                                }}
+                                id="WFH"
+                                value="WFH"
+                              />
+                              <label className="form-check-label" htmlFor="WFH">
+                                WFH
+                              </label>
+                            </div>
+                            <div className="form-check">
+                              <input
+                                className="form-check-input"
+                                type="radio"
+                                checked={reason === "Permission"}
+                                name="Reason"
+                                onChange={() => {
+                                  setReason("Permission");
+                                  setWorkfromhome();
+                                  setAbsencetype();
+                                  setPermissionTime();
+                                }}
+                                id="Permission"
+                                value="Permission"
+                              />
+                              <label
+                                className="form-check-label"
+                                htmlFor="Permission"
+                              >
+                                Permission
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>
+                      {reason === "Leave" && (
+                        <div className="row">
+                          <div className="mb-3 col-md-12">
+                            <div id="firstName">
+                              <label className="form-label">
+                                Reason For Leave
+                              </label>
+                              <select
+                                className="form-select"
+                                id="type"
+                                name="type"
+                                onChange={(event) => {
+                                  setAbsencetype(event.target.value);
+                                }}
+                                value={absencetype}
+                              >
+                                <option selected="">Select absence type</option>
+                                <option value="conference">Conference</option>
+                                <option value="parental leave">
+                                  Parental Leave
+                                </option>
+                                <option value="maternity leave">
+                                  Maternity Leave
+                                </option>
+                                <option value="paternity leave">
+                                  Paternity Leave
+                                </option>
+                                <option value="bereavement leave">
+                                  Bereavement Leave
+                                </option>
+                                <option value="emergency leave">
+                                  Emergency Leave
+                                </option>
+                                <option value="rest day">Rest Day</option>
+                                <option value="sick leave">Sick Leave</option>
+                                <option value="business trip">
+                                  Business Trip
+                                </option>
+                                <option value="paid leave">Paid Leave</option>
+                                <option value="unpaid leave">
+                                  Unpaid Leave
+                                </option>
+                                <option value="vacation">Vacation Leave</option>
+                                <option value="public holiday">
+                                  Public Holiday
+                                </option>
+                                <option value="out of office">
+                                  Out of Office
+                                </option>
+                                <option value="offset leave">
+                                  Offset Leave
+                                </option>
+                                <option value="half day">Half day Leave</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {reason === "Permission" && (
+                        <div className="row">
+                          <div className="mb-3 col-md-12">
+                            <div id="Name">
+                              <label className="form-label">
+                                Permission Time
+                              </label>
+                              <input
+                                className="form-control"
+                                type="time"
+                                onChange={(event) => {
+                                  setPermissionTime(event.target.value);
+                                }}
+                                value={permissionTime}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       <p></p>
                     </form>
@@ -359,7 +464,7 @@ const Main2 = () => {
                   className={styles.userBtn}
                   data-bs-dismiss="modal"
                 >
-                  Apply Leave
+                  Apply
                 </button>
 
                 <button

@@ -30,6 +30,7 @@ function Profile() {
   const [joining, setJoining] = useState([]);
   const [dob, setDob] = useState([]);
   const [profilepic, setProfilepic] = useState("");
+  const [profileStatus, setProfileStatus] = useState([]);
   const [data, setData] = useState([]);
   const [dataAdmin, setDataAdmin] = useState([]);
   // const [showForm, setShowForm] = useState(true);
@@ -126,6 +127,7 @@ function Profile() {
         joiningdate: joining,
         dateofbirth: dob,
         uploaded_file: profilepic,
+        profilestatus: profileStatus,
       })
       .then((response) => {
         // console.log(response.data);
@@ -140,6 +142,7 @@ function Profile() {
         setPhno([]);
         setJoining([]);
         setProfilepic([]);
+        setProfileStatus([]);
         setDob([]);
         // 👇️ reset file input : File input cannot be controlled, there is no React specific way to do that.
         inputRef.current.value = null;
@@ -186,6 +189,7 @@ function Profile() {
           joiningdate: joining,
           dateofbirth: dob,
           uploaded_file: profilepic,
+          profilestatus: profileStatus,
         },
         config
       )
@@ -202,6 +206,7 @@ function Profile() {
         setPhno([]);
         setJoining([]);
         setProfilepic([]);
+        setProfileStatus([]);
         setDob([]);
         // 👇️ reset file input : File input cannot be controlled, there is no React specific way to do that.
         inputRef.current.value = null;
@@ -280,6 +285,7 @@ function Profile() {
     setPhno([]);
     setJoining([]);
     setProfilepic([]);
+    setProfileStatus([]);
     setDob([]);
     removeUploadImg();
   };
@@ -302,6 +308,7 @@ function Profile() {
     setJoining(new Date(user.joiningdate).toISOString().slice(0, 10));
     setDob(new Date(user.dateofbirth).toISOString().slice(0, 10));
     setProfilepic(user.uploaded_file);
+    setProfileStatus(user.profilestatus);
     setEmpId(user._id);
   };
 
@@ -552,26 +559,61 @@ function Profile() {
                               />
                             </div>
                           </div>
-                          <div className="row">
-                            <div className="mb-3 col-md-6">
-                              {profilepic && (
-                                <div className={styles.removeImg}>
-                                  <img
-                                    id={styles.blah}
-                                    src={profilepic}
-                                    alt=""
-                                  />
-                                  <div
-                                    id={styles.removeImage}
-                                    onClick={removeUploadImg}
-                                  >
-                                    <i
-                                      className="fa fa-close"
-                                      aria-hidden="true"
-                                    ></i>
-                                  </div>
+                        </div>
+                        <div className="row">
+                          <div className="mb-3 col-md-6">
+                            {profilepic && (
+                              <div className={styles.removeImg}>
+                                <img id={styles.blah} src={profilepic} alt="" />
+                                <div
+                                  id={styles.removeImage}
+                                  onClick={removeUploadImg}
+                                >
+                                  <i
+                                    className="fa fa-close"
+                                    aria-hidden="true"
+                                  ></i>
                                 </div>
-                              )}
+                              </div>
+                            )}
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label className="form-label">Profile Status</label>
+                            <div className={styles.radio_input}>
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  checked={profileStatus === "Active"}
+                                  name="profileStatus"
+                                  value="Active"
+                                  onChange={() => setProfileStatus("Active")}
+                                  id="Active"
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor="Active"
+                                >
+                                  Active
+                                </label>
+                              </div>
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  checked={profileStatus === "NotActive"}
+                                  name="profileStatus"
+                                  value="NotActive"
+                                  onChange={() => setProfileStatus("NotActive")}
+                                  id="NotActive"
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor="NotActive"
+                                >
+                                  NotActive
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </div>

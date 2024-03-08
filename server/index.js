@@ -43,20 +43,22 @@ app.use("/createuser", async (req, res) => {
       applydate: req.body.applydate,
       currentuserid: req.body.currentuserid,
     });
-    //console.log(date);
 
     if (date)
       return res.status(409).send({ message: `Apply date already Exist!` });
     const user = req.body;
+    // console.log(user);
     const newUser = new UserModel({
       name: req.body.name,
       absencetype: req.body.absencetype,
+      reason: req.body.reason,
       // age: req.body.age,
       // userName: req.body.userName,
       currentuserid: req.body.currentuserid,
       status: req.body.status,
       applydate: req.body.applydate,
     });
+
     await newUser.save();
     res.json(user);
   } catch (error) {

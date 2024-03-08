@@ -42,6 +42,7 @@ router.post("/", upload.single("uploaded_file"), async (req, res) => {
     const result = await cloudinary.uploader.upload(req.body.uploaded_file, {
       folder: "profile",
     });
+
     const newEmployeeinfo = new employeeinfoModel({
       id: req.body.id,
       name: req.body.name,
@@ -56,6 +57,7 @@ router.post("/", upload.single("uploaded_file"), async (req, res) => {
       // uploaded_file: req.body.uploaded_file,
       uploaded_file: result.secure_url,
       cloudinary_id: result.public_id,
+      profilestatus: req.body.profilestatus,
     });
     await newEmployeeinfo.save();
     res.json(employeeinfo);
@@ -139,10 +141,11 @@ router.use("/update/:id", async (req, res) => {
         dateofbirth: req.body.dateofbirth,
         uploaded_file: result.secure_url,
         cloudinary_id: result.public_id,
+        profilestatus: req.body.profilestatus,
       }
     );
     res.send(employeeinfo);
-    //console.log(user);
+    // console.log(employeeinfo);
   } catch (err) {
     console.log(err);
   }

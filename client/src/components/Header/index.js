@@ -70,6 +70,19 @@ function Header() {
               {adminProfile?.isAdmin === true && (
                 <li>
                   <NavLink
+                    to="/wfh"
+                    className={({ isActive }) =>
+                      isActive ? "NavActive" : "inactive"
+                    }
+                  >
+                    <i className="fa fa-book" aria-hidden="true"></i>
+                    <span>WFH</span>
+                  </NavLink>
+                </li>
+              )}
+              {adminProfile?.isAdmin === true && (
+                <li>
+                  <NavLink
                     to="/overall-report"
                     className={({ isActive }) =>
                       isActive ? "NavActive" : "inactive"
