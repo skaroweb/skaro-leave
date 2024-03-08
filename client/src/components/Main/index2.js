@@ -307,7 +307,7 @@ const Main2 = () => {
                       <div className="row">
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Reason Type</label>
-                          <div className="Profile_radio_input__DcU0C">
+                          <div className="apply-reason-leave">
                             <div className="form-check">
                               <input
                                 className="form-check-input"

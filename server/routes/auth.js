@@ -23,7 +23,7 @@ router.post("/", async (req, res, next) => {
     const password2 = user.password; // Stored password in plaintext (not recommended)
 
     const validPassword = password1 === password2;
-    console.log(validPassword);
+    //  console.log(validPassword);
     if (!validPassword)
       return res.status(401).send({ message: "Invalid Email or Password" });
 

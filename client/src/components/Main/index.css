@@ -103,3 +103,6 @@ td.text-success {
     background-color: #fff;
   }
 }
+.apply-reason-leave {
+  display: flex;
+}
