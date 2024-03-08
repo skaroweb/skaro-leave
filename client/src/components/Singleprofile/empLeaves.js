@@ -14,7 +14,7 @@ function EmpLeaves() {
   // Selected Month filter
   const [selectedMonth, setSelectedMonth] = useState("");
   // Selected Year filter
-  const [selectedYear, setSelectedYear] = useState();
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   const [selectedStatus, setSelectedStatus] = useState("");
 
@@ -212,8 +212,17 @@ function EmpLeaves() {
     "November",
     "December",
   ];
-  const year = new Date().getFullYear();
-  const years = Array.from(new Array(20), (val, index) => index + year);
+  // const year = new Date().getFullYear();
+  // const years = Array.from(new Array(20), (val, index) => index + year);
+
+  const uniqueYears = new Set();
+  report.forEach((data) => {
+    const applyDate = new Date(data.applydate);
+    const year = applyDate.getFullYear();
+    uniqueYears.add(year);
+  });
+
+  const arrayOfUniqueYears = Array.from(uniqueYears).sort((a, b) => a - b);
 
   let withoutSat = filteredList.filter(function (obj) {
     return obj.absencetype === "half day";
@@ -246,7 +255,7 @@ function EmpLeaves() {
                 onChange={handleYearChange}
               >
                 <option value="">All</option>
-                {years.map((key, index) => (
+                {arrayOfUniqueYears.map((key, index) => (
                   <option key={index} value={key}>
                     {key}
                   </option>
