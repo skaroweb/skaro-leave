@@ -61,7 +61,7 @@ app.use("/createuser", async (req, res) => {
       status: req.body.status,
       applydate: req.body.applydate,
     });
-    //console.log(newUser);
+
     await newUser.save();
     res.json(user);
   } catch (error) {

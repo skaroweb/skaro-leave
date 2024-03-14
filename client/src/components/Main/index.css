@@ -121,3 +121,6 @@ input[type="time"]::-webkit-clear-button {
   appearance: none;
   margin: -10px;
 }
+input[type="time"]::-webkit-calendar-picker-indicator {
+  display: none;
+}

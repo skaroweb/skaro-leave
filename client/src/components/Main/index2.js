@@ -459,6 +459,8 @@ const Main2 = () => {
                               <input
                                 className="form-control without_ampm"
                                 type="time"
+                                min="00:00"
+                                max="08:00"
                                 onChange={(event) => {
                                   setPermissionTime(event.target.value);
                                 }}
