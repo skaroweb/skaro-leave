@@ -109,7 +109,7 @@ thead tr th i {
 .emp_leave_list .col-md-6:not(:last-child) {
   margin-right: 40px;
 }
-.emp_leave_list .col-md-5 {
+.emp_leave_list > div {
   background: #fff;
   padding: 20px;
 }

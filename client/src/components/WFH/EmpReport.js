@@ -1,7 +1,7 @@
 import "./EmpReport.css";
 const EmpReport = (props) => {
   return (
-    <div className="col-md-5">
+    <div className="col-md-6">
       <div className="main-leave">
         <div className="sub-leave">
           <div>Name</div>

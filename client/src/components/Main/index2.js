@@ -13,6 +13,7 @@ import SubNav from "../Helper/SubNav";
 import TodayEmpLeave from "./TodayEmpLeave";
 import UpcomingLeave from "./UpcomingLeave";
 import { useSelector } from "react-redux";
+import TodayEmpWFH from "./TodayEmpWFH";
 
 const serverURL = process.env.REACT_APP_SERVER_URL;
 
@@ -231,6 +232,7 @@ const Main2 = () => {
         {adminProfile?.isAdmin === true && (
           <div className="Leave_detail_overAll">
             <TodayEmpLeave name={appliedUsers} />
+            <TodayEmpWFH name={appliedUsers} />
             <UpcomingLeave list={upcomingLeaves} />
           </div>
         )}
