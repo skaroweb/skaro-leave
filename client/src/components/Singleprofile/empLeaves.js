@@ -7,6 +7,8 @@ import ReactPaginate from "react-paginate";
 import styles from "../OverallReport/DataTable.module.css";
 import { useSelector } from "react-redux";
 function EmpLeaves() {
+  console.log("currentPage");
+
   const [report, setReport] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); //Pagination
   const [filteredList, setFilteredList] = useState(report);
@@ -122,7 +124,7 @@ function EmpLeaves() {
       }
     });
 
-    console.log(filteredLeaves); // Log the filtered leaves array for debugging purposes
+    // console.log(filteredLeaves); // Log the filtered leaves array for debugging purposes
 
     return filteredLeaves;
   };
@@ -221,7 +223,7 @@ function EmpLeaves() {
   };
 
   const DeselectAll = (event) => {
-    console.log(currentPage);
+    //  console.log(currentPage);
     setSelectedYear(new Date().getFullYear());
     setSelectedMonth("");
     setSelectedStatus("");
@@ -234,6 +236,7 @@ function EmpLeaves() {
   };
 
   useEffect(() => {
+    setCurrentPage(0);
     var filteredData = filterByYear(report);
     filteredData = filterByMonth(filteredData);
     filteredData = filterByDate(filteredData);

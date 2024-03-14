@@ -309,6 +309,7 @@ function WFH() {
   };
 
   useEffect(() => {
+    setCurrentPage(0);
     var filteredData = filterByName(report);
     filteredData = filterByYear(filteredData);
     filteredData = filterByMonth(filteredData);
