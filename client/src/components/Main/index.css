@@ -7,8 +7,8 @@ table.table {
 }
 .card .table td,
 .card .table th {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .table th {
   background-color: #f2f4f6;
@@ -108,4 +108,8 @@ td.text-success {
 }
 .apply-reason-leave > div {
   margin-right: 10px;
+}
+
+input[type="time"]::-webkit-datetime-edit-ampm-field {
+  display: none;
 }
