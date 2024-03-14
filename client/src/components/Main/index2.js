@@ -455,7 +455,7 @@ const Main2 = () => {
                                 Permission Time
                               </label>
                               <input
-                                className="form-control"
+                                className="form-control without_ampm"
                                 type="time"
                                 onChange={(event) => {
                                   setPermissionTime(event.target.value);

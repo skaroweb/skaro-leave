@@ -109,7 +109,14 @@ td.text-success {
 .apply-reason-leave > div {
   margin-right: 10px;
 }
-
-input[type="time"]::-webkit-datetime-edit-ampm-field {
+.without_ampm::-webkit-datetime-edit-ampm-field {
   display: none;
+}
+input[type="time"]::-webkit-clear-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  margin: -10px;
 }
