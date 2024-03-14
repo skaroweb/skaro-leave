@@ -111,6 +111,7 @@ function OverallReport() {
             (profile) => profile._id === obj.currentuserid
           );
           // Check if the profile exists and if its status is "active"
+
           return (
             profile &&
             profile.profilestatus === "Active" &&
@@ -120,11 +121,11 @@ function OverallReport() {
           );
         });
 
-        let leave_count = filteredArray.filter(function (obj) {
-          return obj.status === "approve";
-        });
+        // let leave_count = filteredArray.filter(function (obj) {
+        //   return obj.status === "approve";
+        // });
 
-        setCountLeave(leave_count);
+        // setCountLeave(leave_count);
 
         setReport(
           //  filteredArray.reverse().sort((a, b) => a.name.localeCompare(b.name))
@@ -138,50 +139,105 @@ function OverallReport() {
             (obj) => new Date(obj.applydate).getFullYear() === selectedYear
           );
         }
+        const result2 = filteredResult.reduce((acc, cur) => {
+          const { currentuserid, absencetype, status, reason, permissionTime } =
+            cur;
 
-        const result = filteredResult
-          // .filter(
-          //   (obj) => new Date(obj.applydate).getFullYear() === selectedYear
-          // )
-          .reduce((acc, cur) => {
-            const { currentuserid, absencetype, status } = cur;
-            if (status === "approve") {
-              if (currentuserid in acc) {
-                acc[currentuserid]++;
-              } else {
-                acc[currentuserid] = 1;
-              }
+          if (status === "approve") {
+            // Initialize leave duration in days, hours, and minutes
+            let leaveDays = 0;
+            let leaveHours = 0;
+            let leaveMinutes = 0;
+
+            // Calculate leave duration in days, hours, and minutes based on absence type
+            if (absencetype === "half day") {
+              leaveHours = 4;
+            } else if (absencetype !== "half day" && reason !== "Permission") {
+              leaveDays = 1;
             }
 
-            if (absencetype === "half day" && status !== "reject") {
-              if (currentuserid in acc) {
-                acc[currentuserid] -= 0.5;
-              } else {
-                acc[currentuserid] = -0.5;
-              }
+            // If permission time exists, parse and calculate leave hours and minutes
+            if (reason === "Permission" && permissionTime) {
+              // Parse permission time
+              const [hoursStr, minutesStr] = permissionTime.split(":");
+              const hours = parseInt(hoursStr);
+              const minutes = parseInt(minutesStr);
+
+              // Add parsed hours and minutes to leave duration
+              leaveHours += hours;
+              leaveMinutes += minutes;
             }
 
-            return acc;
-          }, {});
+            // Convert excess minutes to hours
+            if (leaveMinutes >= 60) {
+              const additionalHours = Math.floor(leaveMinutes / 60);
+              leaveHours += additionalHours;
+              leaveMinutes %= 60; // Update leave minutes with remainder
+            }
+
+            // Convert excess hours to days
+            if (leaveHours >= 8) {
+              const additionalDays = Math.floor(leaveHours / 8);
+              leaveDays += additionalDays;
+              leaveHours %= 8; // Update leave hours with remainder
+            }
+
+            // Update accumulator
+            if (currentuserid in acc) {
+              acc[currentuserid].days += leaveDays;
+              acc[currentuserid].hours += leaveHours;
+              acc[currentuserid].minutes += leaveMinutes;
+            } else {
+              acc[currentuserid] = {
+                days: leaveDays,
+                hours: leaveHours,
+                minutes: leaveMinutes,
+              };
+            }
+          }
+
+          return acc;
+        }, {});
+
+        // Adjust the total hours and minutes if needed
+        for (const userId in result2) {
+          let { hours, minutes } = result2[userId];
+
+          // Convert excess minutes to hours
+          if (minutes >= 60) {
+            const additionalHours = Math.floor(minutes / 60);
+            hours += additionalHours;
+            minutes %= 60; // Update leave minutes with remainder
+          }
+
+          // Convert excess hours to days
+          if (hours >= 8) {
+            const additionalDays = Math.floor(hours / 8);
+            result2[userId].days += additionalDays;
+            hours %= 8; // Update leave hours with remainder
+          }
+
+          result2[userId] = { ...result2[userId], hours, minutes };
+        }
+
+        // console.log(result2);
 
         const idToNameMap = {};
 
-        for (const id in result) {
-          const count = result[id];
+        for (const id in result2) {
+          const { days, hours, minutes } = result2[id];
           const profile = empProfile.find((profile) => profile._id === id);
 
-          // let withoutSatReject = filteredArray.filter(function (obj) {
-          //   return obj.absencetype === "half day" && obj.status !== "reject";
-          // });
-          // console.log(withoutSatReject);
           if (profile) {
             idToNameMap[id] = {
-              count: count,
+              days,
+              hours,
+              minutes,
               name: profile.name,
             };
           }
         }
-
+        // console.log(idToNameMap);
         setLeaveCountName(idToNameMap);
       })
       .catch((err) => {
@@ -317,10 +373,9 @@ function OverallReport() {
   // console.log(selectedDate);
   const DeselectAll = (event) => {
     setselectedName("");
-    setSelectedYear("");
+    setSelectedYear(new Date().getFullYear());
     setSelectedMonth("");
     setCurrentPage(0);
-
     setSelectedStatus("");
     setSelectedDate({
       fromdate: "",
@@ -384,10 +439,114 @@ function OverallReport() {
 
   for (const key in leaveCountName) {
     if (leaveCountName.hasOwnProperty(key)) {
-      totalCount += leaveCountName[key].count;
+      totalCount += leaveCountName[key].days;
     }
   }
   // console.log(filteredList);
+  const result3 = filteredList.reduce((acc, cur) => {
+    const { currentuserid, absencetype, status, reason, permissionTime } = cur;
+
+    if (status === "approve") {
+      // Initialize leave duration in days, hours, and minutes
+      let leaveDays = 0;
+      let leaveHours = 0;
+      let leaveMinutes = 0;
+
+      // Calculate leave duration in days, hours, and minutes based on absence type
+      if (absencetype === "half day") {
+        leaveHours = 4;
+      } else if (absencetype !== "half day" && reason !== "Permission") {
+        leaveDays = 1;
+      }
+
+      // If permission time exists, parse and calculate leave hours and minutes
+      if (reason === "Permission" && permissionTime) {
+        // Parse permission time
+        const [hoursStr, minutesStr] = permissionTime.split(":");
+        const hours = parseInt(hoursStr);
+        const minutes = parseInt(minutesStr);
+
+        // Add parsed hours and minutes to leave duration
+        leaveHours += hours;
+        leaveMinutes += minutes;
+      }
+
+      // Convert excess minutes to hours
+      if (leaveMinutes >= 60) {
+        const additionalHours = Math.floor(leaveMinutes / 60);
+        leaveHours += additionalHours;
+        leaveMinutes %= 60; // Update leave minutes with remainder
+      }
+
+      // Convert excess hours to days
+      if (leaveHours >= 8) {
+        const additionalDays = Math.floor(leaveHours / 8);
+        leaveDays += additionalDays;
+        leaveHours %= 8; // Update leave hours with remainder
+      }
+
+      // Update accumulator
+      if (currentuserid in acc) {
+        acc[currentuserid].days += leaveDays;
+        acc[currentuserid].hours += leaveHours;
+        acc[currentuserid].minutes += leaveMinutes;
+      } else {
+        acc[currentuserid] = {
+          days: leaveDays,
+          hours: leaveHours,
+          minutes: leaveMinutes,
+        };
+      }
+    }
+
+    return acc;
+  }, {});
+
+  // Adjust the total hours and minutes if needed
+  for (const userId in result3) {
+    let { hours, minutes } = result3[userId];
+
+    // Convert excess minutes to hours
+    if (minutes >= 60) {
+      const additionalHours = Math.floor(minutes / 60);
+      hours += additionalHours;
+      minutes %= 60; // Update leave minutes with remainder
+    }
+
+    // Convert excess hours to days
+    if (hours >= 8) {
+      const additionalDays = Math.floor(hours / 8);
+      result3[userId].days += additionalDays;
+      hours %= 8; // Update leave hours with remainder
+    }
+
+    result3[userId] = { ...result3[userId], hours, minutes };
+  }
+
+  // console.log(result2);
+
+  const idToNameMap = {};
+
+  for (const id in result3) {
+    const { days, hours, minutes } = result3[id];
+    const profile = empProfile.find((profile) => profile._id === id);
+
+    if (profile) {
+      idToNameMap[id] = {
+        days,
+        hours,
+        minutes,
+        name: profile.name,
+      };
+    }
+  }
+  // Initialize total days
+  let FilteredDays = 0;
+
+  // Iterate through the result3 object to calculate total days
+  for (const userId in result3) {
+    FilteredDays += result3[userId].days;
+  }
 
   return (
     <>
@@ -406,7 +565,7 @@ function OverallReport() {
                 onChange={handleStatusChange}
               >
                 <option value="">All</option>
-                <option value="approve">Approve</option>
+                <option value="approve">Approved</option>
                 <option value="reject">Reject</option>
               </select>
             </div>
@@ -510,6 +669,7 @@ function OverallReport() {
                     ></i>
                   </th>
                   <th>Absence type </th>
+                  <th>Permission </th>
                   <th>status</th>
                   <th>Action</th>
                 </tr>
@@ -528,13 +688,14 @@ function OverallReport() {
                           day: "numeric",
                         })}
                       </td>
-                      <td>{item.absencetype}</td>
+                      <td>{item.absencetype ? item.absencetype : "-"}</td>
+                      <td>{item.permissionTime ? item.permissionTime : "-"}</td>
                       <td
                         className={`${
                           item.status === "reject" ? "text-danger" : ""
                         } ${item.status === "approve" ? "text-success" : ""}`}
                       >
-                        {item.status}
+                        {item.status === "approve" ? "approved" : item.status}
                       </td>
                       <td>
                         <Dropdown as={ButtonGroup} className="">
@@ -613,8 +774,7 @@ function OverallReport() {
               )}
               {hide && (
                 <div className="total_leave">
-                  Total filtered Leave count:{" "}
-                  <span>{filteredList.length - withoutSat.length / 2}</span>
+                  Total filtered Leave count: <span>{FilteredDays}</span>
                 </div>
               )}
             </div>
@@ -628,7 +788,7 @@ function OverallReport() {
             <EmpLeaveChart leaveCountName={leaveCountName} />
             <EmpReport
               leaveCountName={leaveCountName}
-              count={filteredList.length - withoutSatReject.length / 2}
+              // count={filteredList.length - withoutSatReject.length / 2}
             />
           </div>
         </>

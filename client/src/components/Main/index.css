@@ -105,5 +105,7 @@ td.text-success {
 }
 .apply-reason-leave {
   display: flex;
+}
+.apply-reason-leave > div {
   margin-right: 10px;
 }

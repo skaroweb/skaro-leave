@@ -10,6 +10,7 @@ function EmpLeaves() {
   const [report, setReport] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); //Pagination
   const [filteredList, setFilteredList] = useState(report);
+  const [empProfile, setEmpProfile] = useState([]);
 
   // Selected Month filter
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -17,6 +18,8 @@ function EmpLeaves() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   const [selectedStatus, setSelectedStatus] = useState("");
+
+  const [selectedReason, setSelectedReason] = useState("absencetype");
 
   //const [countLeave, setCountLeave] = useState([]);
 
@@ -29,6 +32,15 @@ function EmpLeaves() {
   const serverURL = process.env.REACT_APP_SERVER_URL;
 
   const location = useLocation();
+
+  useEffect(() => {
+    axios
+      .get(`${serverURL}/api/employeeinfo/`)
+      .then((res) => {
+        setEmpProfile(res.data);
+      })
+      .catch((err) => console.log(err, "it has an error"));
+  }, []);
 
   // Pagination
   const PER_PAGE = 10;
@@ -89,6 +101,30 @@ function EmpLeaves() {
       (car) => car.status.split(" ").indexOf(selectedStatus) !== -1
     );
     return filteredCars;
+  };
+
+  const filterByReason = (filteredData) => {
+    // Avoid filter for empty string or undefined data
+    if (!selectedReason || !Array.isArray(filteredData)) {
+      return filteredData;
+    }
+
+    const filteredLeaves = filteredData.filter((leave) => {
+      // Check if the leave object has the absencetype property
+      if (selectedReason === "absencetype") {
+        return leave.hasOwnProperty("absencetype");
+      }
+      if (selectedReason === "workFromHome") {
+        return leave.hasOwnProperty("workFromHome");
+      }
+      if (selectedReason === "permissionTime") {
+        return leave.hasOwnProperty("permissionTime");
+      }
+    });
+
+    console.log(filteredLeaves); // Log the filtered leaves array for debugging purposes
+
+    return filteredLeaves;
   };
 
   const filterByDate = (filteredData) => {
@@ -161,6 +197,10 @@ function EmpLeaves() {
     setSelectedStatus(event.target.value);
   };
 
+  const handleReasonChange = (event) => {
+    setSelectedReason(event.target.value); // Update selectedReason state with the selected value from the dropdown
+  };
+
   const handleDateChange = (event) => {
     const { name, value } = event.target;
     setSelectedDate({
@@ -181,9 +221,12 @@ function EmpLeaves() {
   };
 
   const DeselectAll = (event) => {
-    setSelectedYear("");
+    console.log(currentPage);
+    setSelectedYear(new Date().getFullYear());
     setSelectedMonth("");
     setSelectedStatus("");
+    setSelectedReason("");
+    setCurrentPage(0);
     setSelectedDate({
       fromdate: "",
       todate: "",
@@ -195,8 +238,16 @@ function EmpLeaves() {
     filteredData = filterByMonth(filteredData);
     filteredData = filterByDate(filteredData);
     filteredData = filterByStatus(filteredData);
+    filteredData = filterByReason(filteredData);
     setFilteredList(filteredData);
-  }, [selectedYear, selectedMonth, selectedDate, selectedStatus, report]);
+  }, [
+    selectedYear,
+    selectedMonth,
+    selectedDate,
+    selectedStatus,
+    selectedReason,
+    report,
+  ]);
 
   var monthNames = [
     "January",
@@ -227,6 +278,112 @@ function EmpLeaves() {
   let withoutSat = filteredList.filter(function (obj) {
     return obj.absencetype === "half day";
   });
+
+  const result3 = filteredList.reduce((acc, cur) => {
+    const { currentuserid, absencetype, status, reason, permissionTime } = cur;
+
+    if (status === "approve") {
+      // Initialize leave duration in days, hours, and minutes
+      let leaveDays = 0;
+      let leaveHours = 0;
+      let leaveMinutes = 0;
+
+      // Calculate leave duration in days, hours, and minutes based on absence type
+      if (absencetype === "half day") {
+        leaveHours = 4;
+      } else if (absencetype !== "half day" && reason !== "Permission") {
+        leaveDays = 1;
+      }
+
+      // If permission time exists, parse and calculate leave hours and minutes
+      if (reason === "Permission" && permissionTime) {
+        // Parse permission time
+        const [hoursStr, minutesStr] = permissionTime.split(":");
+        const hours = parseInt(hoursStr);
+        const minutes = parseInt(minutesStr);
+
+        // Add parsed hours and minutes to leave duration
+        leaveHours += hours;
+        leaveMinutes += minutes;
+      }
+
+      // Convert excess minutes to hours
+      if (leaveMinutes >= 60) {
+        const additionalHours = Math.floor(leaveMinutes / 60);
+        leaveHours += additionalHours;
+        leaveMinutes %= 60; // Update leave minutes with remainder
+      }
+
+      // Convert excess hours to days
+      if (leaveHours >= 8) {
+        const additionalDays = Math.floor(leaveHours / 8);
+        leaveDays += additionalDays;
+        leaveHours %= 8; // Update leave hours with remainder
+      }
+
+      // Update accumulator
+      if (currentuserid in acc) {
+        acc[currentuserid].days += leaveDays;
+        acc[currentuserid].hours += leaveHours;
+        acc[currentuserid].minutes += leaveMinutes;
+      } else {
+        acc[currentuserid] = {
+          days: leaveDays,
+          hours: leaveHours,
+          minutes: leaveMinutes,
+        };
+      }
+    }
+
+    return acc;
+  }, {});
+
+  // Adjust the total hours and minutes if needed
+  for (const userId in result3) {
+    let { hours, minutes } = result3[userId];
+
+    // Convert excess minutes to hours
+    if (minutes >= 60) {
+      const additionalHours = Math.floor(minutes / 60);
+      hours += additionalHours;
+      minutes %= 60; // Update leave minutes with remainder
+    }
+
+    // Convert excess hours to days
+    if (hours >= 8) {
+      const additionalDays = Math.floor(hours / 8);
+      result3[userId].days += additionalDays;
+      hours %= 8; // Update leave hours with remainder
+    }
+
+    result3[userId] = { ...result3[userId], hours, minutes };
+  }
+
+  // console.log(result2);
+
+  const idToNameMap = {};
+
+  for (const id in result3) {
+    const { days, hours, minutes } = result3[id];
+    const profile = empProfile.find((profile) => profile._id === id);
+
+    if (profile) {
+      idToNameMap[id] = {
+        days,
+        hours,
+        minutes,
+        name: profile.name,
+      };
+    }
+  }
+  // Initialize total days
+  let FilteredDays = 0;
+
+  // Iterate through the result3 object to calculate total days
+  for (const userId in result3) {
+    FilteredDays += result3[userId].days;
+  }
+
   return (
     <>
       <div className="sidebar">{adminProfile && <Header />}</div>
@@ -243,8 +400,21 @@ function EmpLeaves() {
                 onChange={handleStatusChange}
               >
                 <option value="">All</option>
-                <option value="approve">Approve</option>
+                <option value="approve">Approved</option>
                 <option value="reject">Reject</option>
+              </select>
+            </div>
+            <div className="filter-reason">
+              <label>Filter by reason :</label>
+              <select
+                className="fmxw-200 d-md-inline form-select"
+                value={selectedReason}
+                onChange={handleReasonChange}
+              >
+                <option value="">All</option>
+                <option value="absencetype">Leave</option>
+                <option value="workFromHome">WFH</option>
+                <option value="permissionTime">Permission</option>
               </select>
             </div>
             <div className="filter-year">
@@ -299,7 +469,7 @@ function EmpLeaves() {
                 onChange={handleDateChange}
               />
             </div>
-            <button className="btn btn-dark mt-3" onClick={DeselectAll}>
+            <button className="btn btn-dark mt-3 test" onClick={DeselectAll}>
               Deselect All
             </button>
           </div>
@@ -316,8 +486,11 @@ function EmpLeaves() {
                     onClick={() => handleSort("date")}
                   ></i>
                 </th>
-                <th>status</th>
+
                 <th>Absence type </th>
+                <th>Permission </th>
+                <th>WFH </th>
+                <th>status</th>
               </tr>
             </thead>
             <tbody>
@@ -335,13 +508,16 @@ function EmpLeaves() {
                         day: "numeric",
                       })}
                     </td>
-                    <td>{item.absencetype}</td>
+
+                    <td>{item.absencetype ? item.absencetype : "-"}</td>
+                    <td>{item.permissionTime ? item.permissionTime : "-"}</td>
+                    <td>{item.workFromHome ? item.workFromHome : "-"}</td>
                     <td
                       className={`${
                         item.status === "reject" ? "text-danger" : ""
                       } ${item.status === "approve" ? "text-success" : ""}`}
                     >
-                      {item.status}
+                      {item.status === "approve" ? "approved" : item.status}
                     </td>
                   </tr>
                 ))}
@@ -361,11 +537,11 @@ function EmpLeaves() {
                 activeClassName={styles.paginationActive}
                 pageRangeDisplayed={2}
                 marginPagesDisplayed={1}
+                forcePage={currentPage} // Set the active page
               />
             )}
             <div className="total_leave">
-              Total result count:{" "}
-              <span>{filteredList.length - withoutSat.length / 2}</span>
+              Total result count: <span>{FilteredDays}</span>
             </div>
           </div>
         </div>

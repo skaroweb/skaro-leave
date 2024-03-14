@@ -699,7 +699,11 @@ function Profile() {
                     .map((user, index) => {
                       return (
                         <div className="col-xl-3 col-sm-6 mb-5" key={index}>
-                          <div className="bg-white rounded shadow-sm py-3 px-2">
+                          <div
+                            className={`bg-white rounded shadow-sm py-3 px-2 ${
+                              user.profilestatus !== "Active" && "notactive"
+                            }`}
+                          >
                             <img
                               src={user.uploaded_file}
                               alt=""

@@ -22,7 +22,15 @@ const Main2 = () => {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [status, setStatus] = useState("");
-  const [applydate, setapplyDate] = useState("");
+  // Function to get today's date in the correct format (YYYY-MM-DD)
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  const [applydate, setapplyDate] = useState(getTodayDate());
   const [permissionTime, setPermissionTime] = useState();
   const [workfromhome, setWorkfromhome] = useState();
   const [reason, setReason] = useState([]);
@@ -107,10 +115,13 @@ const Main2 = () => {
           const leaveDate = new Date(leave.applydate)
             .toISOString()
             .split("T")[0];
+
           return (
             leaveDate > currentDate &&
             leaveDate <= oneWeekAfterCurrentDate.toISOString().split("T")[0] &&
-            leave.status === "approve"
+            leave.status === "approve" &&
+            leave.reason !== "Permission" &&
+            leave.reason !== "WFH"
           );
         });
         setAppliedUsers(filteredUsers);
@@ -141,12 +152,12 @@ const Main2 = () => {
       .then((response) => {
         console.log(response.data);
         setIsLoading(true);
-        setAbsencetype([]);
+        setAbsencetype(getTodayDate());
         setReason();
         setPermissionTime();
         setWorkfromhome();
         setapplyDate([]);
-        toast.success("Leave applied successfully");
+        toast.success("Applied successfully");
       })
       .catch(function (error) {
         if (
@@ -178,7 +189,7 @@ const Main2 = () => {
 
   const clear = () => {
     setAbsencetype([]);
-    setapplyDate([]);
+    setapplyDate(getTodayDate());
   };
 
   const filteredListOfUsers =
@@ -270,15 +281,19 @@ const Main2 = () => {
                               >
                                 <option value="">Select an Name</option>
 
-                                {empProfile.map((user, index) => (
-                                  <option
-                                    key={user._id}
-                                    data-id={user._id}
-                                    value={user.name}
-                                  >
-                                    {user.name}
-                                  </option>
-                                ))}
+                                {empProfile
+                                  .filter(
+                                    (user) => user.profilestatus === "Active"
+                                  )
+                                  .map((user, index) => (
+                                    <option
+                                      key={user._id}
+                                      data-id={user._id}
+                                      value={user.name}
+                                    >
+                                      {user.name}
+                                    </option>
+                                  ))}
                               </select>
                             ) : (
                               <input
@@ -505,6 +520,8 @@ const Main2 = () => {
                       </th>
                       <th>status</th>
                       <th>Absence type </th>
+                      <th>Permission </th>
+                      <th>WFH </th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -570,7 +587,14 @@ const Main2 = () => {
                               )}
                             </td>
                             <td className="text-warning">{user.status}</td>
-                            <td>{user.absencetype}</td>
+
+                            <td>{user.absencetype ? user.absencetype : "-"}</td>
+                            <td>
+                              {user.permissionTime ? user.permissionTime : "-"}
+                            </td>
+                            <td>
+                              {user.workFromHome ? user.workFromHome : "-"}
+                            </td>
                             <td>
                               {adminProfile?.isAdmin === true ? (
                                 <button

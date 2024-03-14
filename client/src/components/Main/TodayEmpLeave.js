@@ -27,7 +27,10 @@ const TodayEmpLeave = (props) => {
     if (array1.length > 0 && array2.length > 0) {
       const matchingNames = array1.filter((item1) =>
         array2.some(
-          (item2) => item2.currentuserid === item1._id && item2.reason !== "WFH"
+          (item2) =>
+            item2.currentuserid === item1._id &&
+            item2.reason !== "WFH" &&
+            item2.reason !== "Permission"
         )
       );
       setMatchingNames(matchingNames);

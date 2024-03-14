@@ -296,11 +296,10 @@ function WFH() {
   };
   // console.log(selectedDate);
   const DeselectAll = (event) => {
-    setselectedName("");
-    setSelectedYear("");
-    setSelectedMonth("");
     setCurrentPage(0);
-
+    setselectedName("");
+    setSelectedYear(new Date().getFullYear());
+    setSelectedMonth("");
     setSelectedStatus("");
     setSelectedDate({
       fromdate: "",
@@ -368,7 +367,7 @@ function WFH() {
                 onChange={handleStatusChange}
               >
                 <option value="">All</option>
-                <option value="approve">Approve</option>
+                <option value="approve">Approved</option>
                 <option value="reject">Reject</option>
               </select>
             </div>
@@ -475,7 +474,7 @@ function WFH() {
                           item.status === "reject" ? "text-danger" : ""
                         } ${item.status === "approve" ? "text-success" : ""}`}
                       >
-                        {item.status}
+                        {item.status === "approve" ? "approved" : item.status}
                       </td>
                       <td>
                         <Dropdown as={ButtonGroup} className="">

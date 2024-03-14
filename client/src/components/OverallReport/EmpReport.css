@@ -22,3 +22,7 @@
   color: #000 !important;
   padding: 10px;
 }
+strong.strongdays {
+  font-size: 18px;
+  vertical-align: middle;
+}

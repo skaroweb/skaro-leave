@@ -52,13 +52,16 @@ app.use("/createuser", async (req, res) => {
       name: req.body.name,
       absencetype: req.body.absencetype,
       reason: req.body.reason,
+      permissionTime: req.body.permissionTime,
+      workFromHome: req.body.workFromHome,
+
       // age: req.body.age,
       // userName: req.body.userName,
       currentuserid: req.body.currentuserid,
       status: req.body.status,
       applydate: req.body.applydate,
     });
-
+    //console.log(newUser);
     await newUser.save();
     res.json(user);
   } catch (error) {

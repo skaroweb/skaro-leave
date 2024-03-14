@@ -15,7 +15,7 @@ const EmpLeaveChart = (props) => {
   };
 
   const data = props.leaveCountName;
-  const values = Object.keys(data).map((key) => data[key].count);
+  const values = Object.keys(data).map((key) => data[key].days);
   const Names = Object.keys(props.leaveCountName).map((key) => data[key].name);
 
   const renderCharts = () => {
