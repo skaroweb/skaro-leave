@@ -93,14 +93,6 @@ function WFH() {
       .get(`${serverURL}/getusers`)
       .then((response) => {
         setIsLoading(false);
-        // const currentYear = new Date().getFullYear();
-
-        // let filteredArray = response.data.filter(function (obj) {
-        //   // Check if the status is not "pending" and the applydate is in the current year
-        //   const applyDateYear = new Date(obj.applydate).getFullYear();
-        //   return obj.status !== "pending" && applyDateYear === currentYear;
-        // });
-
         let filteredArray = response.data.filter(function (obj) {
           // Check if the status is not "pending" and the applydate is in the current year
           return obj.status !== "pending" && obj.reason === "WFH";
@@ -119,35 +111,83 @@ function WFH() {
           );
         }
 
-        const result = filteredResult
-          // .filter(
-          //   (obj) => new Date(obj.applydate).getFullYear() === selectedYear
-          // )
-          .reduce((acc, cur) => {
-            const { currentuserid, absencetype, status } = cur;
-            if (status === "approve") {
-              if (currentuserid in acc) {
-                acc[currentuserid]++;
-              } else {
-                acc[currentuserid] = 1;
-              }
+        const result = filteredResult.reduce((acc, cur) => {
+          const { currentuserid, status, reason, workFromHome } = cur;
+
+          if (status === "approve") {
+            // Initialize leave duration in days, hours, and minutes
+            let leaveDays = 0;
+            let leaveHours = 0;
+            let leaveMinutes = 0;
+
+            // If permission time exists, parse and calculate leave hours and minutes
+            if (reason === "WFH" && workFromHome) {
+              // Parse permission time
+              const [hoursStr, minutesStr] = workFromHome.split(":");
+              const hours = parseInt(hoursStr);
+              const minutes = parseInt(minutesStr);
+
+              // Add parsed hours and minutes to leave duration
+              leaveHours += hours;
+              leaveMinutes += minutes;
             }
 
-            if (absencetype === "half day" && status !== "reject") {
-              if (currentuserid in acc) {
-                acc[currentuserid] -= 0.5;
-              } else {
-                acc[currentuserid] = -0.5;
-              }
+            // Convert excess minutes to hours
+            if (leaveMinutes >= 60) {
+              const additionalHours = Math.floor(leaveMinutes / 60);
+              leaveHours += additionalHours;
+              leaveMinutes %= 60; // Update leave minutes with remainder
             }
 
-            return acc;
-          }, {});
+            // Convert excess hours to days
+            if (leaveHours >= 8) {
+              const additionalDays = Math.floor(leaveHours / 8);
+              leaveDays += additionalDays;
+              leaveHours %= 8; // Update leave hours with remainder
+            }
 
+            // Update accumulator
+            if (currentuserid in acc) {
+              acc[currentuserid].days += leaveDays;
+              acc[currentuserid].hours += leaveHours;
+              acc[currentuserid].minutes += leaveMinutes;
+            } else {
+              acc[currentuserid] = {
+                days: leaveDays,
+                hours: leaveHours,
+                minutes: leaveMinutes,
+              };
+            }
+          }
+
+          return acc;
+        }, {});
+
+        // Adjust the total hours and minutes if needed
+        for (const userId in result) {
+          let { hours, minutes } = result[userId];
+
+          // Convert excess minutes to hours
+          if (minutes >= 60) {
+            const additionalHours = Math.floor(minutes / 60);
+            hours += additionalHours;
+            minutes %= 60; // Update leave minutes with remainder
+          }
+
+          // Convert excess hours to days
+          if (hours >= 8) {
+            const additionalDays = Math.floor(hours / 8);
+            result[userId].days += additionalDays;
+            hours %= 8; // Update leave hours with remainder
+          }
+
+          result[userId] = { ...result[userId], hours, minutes };
+        }
         const idToNameMap = {};
+        console.log(result);
 
         for (const id in result) {
-          const count = result[id];
+          const { days, hours, minutes } = result[id];
           const profile = empProfile.find((profile) => profile._id === id);
 
           // let withoutSatReject = filteredArray.filter(function (obj) {
@@ -156,7 +196,9 @@ function WFH() {
           // console.log(withoutSatReject);
           if (profile) {
             idToNameMap[id] = {
-              count: count,
+              days,
+              hours,
+              minutes,
               name: profile.name,
             };
           }
@@ -346,10 +388,110 @@ function WFH() {
 
   for (const key in leaveCountName) {
     if (leaveCountName.hasOwnProperty(key)) {
-      totalCount += leaveCountName[key].count;
+      totalCount += leaveCountName[key].days;
     }
   }
-  console.log(filteredList);
+
+  const result3 = filteredList.reduce((acc, cur) => {
+    const { currentuserid, status, reason, workFromHome } = cur;
+
+    if (status === "approve") {
+      // Initialize leave duration in days, hours, and minutes
+      let leaveDays = 0;
+      let leaveHours = 0;
+      let leaveMinutes = 0;
+
+      // If permission time exists, parse and calculate leave hours and minutes
+      if (reason === "WFH" && workFromHome) {
+        // Parse permission time
+        const [hoursStr, minutesStr] = workFromHome.split(":");
+        const hours = parseInt(hoursStr);
+        const minutes = parseInt(minutesStr);
+
+        // Add parsed hours and minutes to leave duration
+        leaveHours += hours;
+        leaveMinutes += minutes;
+      }
+
+      // Convert excess minutes to hours
+      if (leaveMinutes >= 60) {
+        const additionalHours = Math.floor(leaveMinutes / 60);
+        leaveHours += additionalHours;
+        leaveMinutes %= 60; // Update leave minutes with remainder
+      }
+
+      // Convert excess hours to days
+      if (leaveHours >= 8) {
+        const additionalDays = Math.floor(leaveHours / 8);
+        leaveDays += additionalDays;
+        leaveHours %= 8; // Update leave hours with remainder
+      }
+
+      // Update accumulator
+      if (currentuserid in acc) {
+        acc[currentuserid].days += leaveDays;
+        acc[currentuserid].hours += leaveHours;
+        acc[currentuserid].minutes += leaveMinutes;
+      } else {
+        acc[currentuserid] = {
+          days: leaveDays,
+          hours: leaveHours,
+          minutes: leaveMinutes,
+        };
+      }
+    }
+
+    return acc;
+  }, {});
+
+  // Adjust the total hours and minutes if needed
+  for (const userId in result3) {
+    let { hours, minutes } = result3[userId];
+
+    // Convert excess minutes to hours
+    if (minutes >= 60) {
+      const additionalHours = Math.floor(minutes / 60);
+      hours += additionalHours;
+      minutes %= 60; // Update leave minutes with remainder
+    }
+
+    // Convert excess hours to days
+    if (hours >= 8) {
+      const additionalDays = Math.floor(hours / 8);
+      result3[userId].days += additionalDays;
+      hours %= 8; // Update leave hours with remainder
+    }
+
+    result3[userId] = { ...result3[userId], hours, minutes };
+  }
+
+  // console.log(result2);
+
+  const idToNameMap = {};
+
+  for (const id in result3) {
+    const { days, hours, minutes } = result3[id];
+    const profile = empProfile.find((profile) => profile._id === id);
+
+    if (profile) {
+      idToNameMap[id] = {
+        days,
+        hours,
+        minutes,
+        name: profile.name,
+      };
+    }
+  }
+
+  // Initialize total days
+  let FilteredDays = 0;
+
+  // Iterate through the result3 object to calculate total days
+  for (const userId in result3) {
+    FilteredDays += result3[userId].days;
+  }
+
+  // console.log(FilteredDays);
 
   return (
     <>
@@ -450,7 +592,7 @@ function WFH() {
                       onClick={() => handleSort("date")}
                     ></i>
                   </th>
-
+                  <th>WFH</th>
                   <th>status</th>
                   <th>Action</th>
                 </tr>
@@ -469,7 +611,7 @@ function WFH() {
                           day: "numeric",
                         })}
                       </td>
-
+                      <td>{item.workFromHome ? item.workFromHome : "-"}</td>
                       <td
                         className={`${
                           item.status === "reject" ? "text-danger" : ""
@@ -536,14 +678,13 @@ function WFH() {
               {!hide && (
                 <>
                   <div className="total_leave">
-                    Total Approved WFH : <span>{filteredList.length}</span>
+                    Total Approved WFH : <span>{totalCount}</span>
                   </div>
                 </>
               )}
               {hide && (
                 <div className="total_leave">
-                  Total filtered WFH count:{" "}
-                  <span>{filteredList.length - withoutSat.length / 2}</span>
+                  Total filtered WFH count: <span>{FilteredDays}</span>
                 </div>
               )}
             </div>
@@ -555,10 +696,7 @@ function WFH() {
           </h2>
           <div className="emp_leave_list">
             <EmpLeaveChart leaveCountName={leaveCountName} />
-            <EmpReport
-              leaveCountName={leaveCountName}
-              count={filteredList.length - withoutSatReject.length / 2}
-            />
+            <EmpReport leaveCountName={leaveCountName} />
           </div>
         </>
       </div>

@@ -37,6 +37,10 @@ const userSchema = new Schema(
       type: ObjectId,
       required: true,
     },
+    compensation: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

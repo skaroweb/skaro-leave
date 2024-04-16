@@ -32,7 +32,9 @@ const ExcelReport = (props) => {
         month: "long",
         day: "numeric",
       }),
+      reason: obj.reason,
       absencetype: obj.absencetype,
+      permissionTime: obj.permissionTime,
     }));
   };
 

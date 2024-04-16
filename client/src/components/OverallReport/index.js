@@ -29,13 +29,32 @@ function OverallReport() {
 
   // Selected User name filter
   const [selectedName, setselectedName] = useState("");
+  // Get current month name
+  const getCurrentMonth = () => {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const currentDate = new Date();
+    return months[currentDate.getMonth()];
+  };
   // Selected Month filter
-  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState();
+  const [selectedReason, setSelectedReason] = useState();
   // Selected Year filter
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   const [selectedStatus, setSelectedStatus] = useState("");
-
   const [countLeave, setCountLeave] = useState([]);
 
   const [selectedDate, setSelectedDate] = useState({
@@ -132,8 +151,11 @@ function OverallReport() {
           filteredArray.reverse()
         );
 
-        let filteredResult = filteredArray;
-
+        let filteredResult = filteredArray.filter(
+          (item) => item.compensation !== true
+        );
+        // let filteredResult = filteredArray;
+        //   console.log(filteredResult);
         if (selectedYear !== 0) {
           filteredResult = filteredResult.filter(
             (obj) => new Date(obj.applydate).getFullYear() === selectedYear
@@ -220,7 +242,7 @@ function OverallReport() {
           result2[userId] = { ...result2[userId], hours, minutes };
         }
 
-        // console.log(result2);
+        //  console.log(result2);
 
         const idToNameMap = {};
 
@@ -270,6 +292,24 @@ function OverallReport() {
     const filteredCars = filteredData.filter(
       (car) => car.status.split(" ").indexOf(selectedStatus) !== -1
     );
+    return filteredCars;
+  };
+
+  const filterByReason = (filteredData) => {
+    //  console.log(filteredData);
+    // Avoid filter for empty string
+    if (!selectedReason) {
+      return filteredData;
+    }
+
+    const filteredCars = filteredData.filter((car) => {
+      if (selectedReason === "Permission") {
+        return car.reason === selectedReason;
+      } else {
+        return car.absencetype;
+      }
+    });
+
     return filteredCars;
   };
 
@@ -341,16 +381,28 @@ function OverallReport() {
   };
 
   // Toggle seletedMonth state
-  // const handleMonthChange = (event) => {
-  //   setSelectedMonth(event.target.value);
-  // };
+  const handleMonthChange = (event) => {
+    setHide(true);
+    setSelectedMonth(event.target.value);
+  };
 
   // Toggle seletedMonth state
   const handleStatusChange = (event) => {
     setHide(true);
     setSelectedStatus(event.target.value);
   };
+  // Toggle seletedMonth state
+  const handleReasonChange = (event) => {
+    // if (event.target.value === "Permission") {
+    //   setHide();
+    // } else {
+    //   setHide(true);
+    // }
+    setHide(true);
 
+    setSelectedReason(event.target.value);
+  };
+  console.log(hide);
   //Toggle seletedYear state
   const handleYearChange = (event) => {
     const inputYear = Number(event.target.value);
@@ -377,6 +429,7 @@ function OverallReport() {
     setSelectedMonth("");
     setCurrentPage(0);
     setSelectedStatus("");
+    setSelectedReason("");
     setSelectedDate({
       fromdate: "",
       todate: "",
@@ -391,6 +444,7 @@ function OverallReport() {
     filteredData = filterByMonth(filteredData);
     filteredData = filterByDate(filteredData);
     filteredData = filterByStatus(filteredData);
+    filteredData = filterByReason(filteredData);
     setFilteredList(filteredData);
   }, [
     selectedName,
@@ -398,6 +452,7 @@ function OverallReport() {
     selectedMonth,
     selectedDate,
     selectedStatus,
+    selectedReason,
     report,
   ]);
 
@@ -524,8 +579,6 @@ function OverallReport() {
     result3[userId] = { ...result3[userId], hours, minutes };
   }
 
-  // console.log(result2);
-
   const idToNameMap = {};
 
   for (const id in result3) {
@@ -541,6 +594,7 @@ function OverallReport() {
       };
     }
   }
+  console.log(result3);
   // Initialize total days
   let FilteredDays = 0;
 
@@ -548,6 +602,38 @@ function OverallReport() {
   for (const userId in result3) {
     FilteredDays += result3[userId].days;
   }
+
+  // let FilteredDays = 0;
+  // let FilteredHours = 0;
+
+  // // Iterate through the result3 object to calculate total days and hours
+  // for (const userId in result3) {
+  //   FilteredDays += result3[userId].days; // Add days as they are
+  //   FilteredDays += Math.floor(result3[userId].hours / 8); // Convert hours to days
+  //   FilteredHours += result3[userId].hours % 8; // Remaining hours after converting to days
+  // }
+
+  // // Adjust hours if it exceeds 8 to add more days
+  // FilteredDays += Math.floor(FilteredHours / 8);
+  // FilteredHours %= 8;
+
+  // console.log("Total Days:", FilteredDays);
+  // console.log("Total Hours:", FilteredHours);
+
+  var monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   return (
     <>
@@ -570,6 +656,18 @@ function OverallReport() {
                 <option value="reject">Reject</option>
               </select>
             </div>
+            <div className="filter-reason">
+              <label>Filter by reason :</label>
+              <select
+                className="fmxw-200 d-md-inline form-select"
+                value={selectedReason}
+                onChange={handleReasonChange}
+              >
+                <option value="">All</option>
+                <option value="Leave">Leave</option>
+                <option value="Permission">Permission</option>
+              </select>
+            </div>
             <div className="filter-year">
               <label>Filter by year :</label>
               <select
@@ -585,7 +683,7 @@ function OverallReport() {
                 ))}
               </select>
             </div>
-            {/*   <div className="filter-month">
+            <div className="filter-month">
               <label>Filter by Month :</label>
               <select
                 className="fmxw-200 d-md-inline form-select"
@@ -599,7 +697,7 @@ function OverallReport() {
                   </option>
                 ))}
               </select>
-            </div> */}
+            </div>
             <div className="filter-name">
               <label>Filter by name :</label>
               <select
@@ -679,7 +777,10 @@ function OverallReport() {
                 {filteredList
                   .slice(offset, offset + PER_PAGE)
                   .map((item, index) => (
-                    <tr key={index}>
+                    <tr
+                      key={index}
+                      className={item.compensation ? "disable" : ""}
+                    >
                       <td>{item.name}</td>
 
                       <td>
@@ -758,22 +859,14 @@ function OverallReport() {
             </span> */}
 
             <div className="total_leave_detail">
-              {!hide && (
+              {hide === false && selectedReason !== "Permission" && (
                 <>
-                  {/* <div className="total_leave">
-                    Total Applied Leave :{" "}
-                    <span>{report.length - withoutSat.length / 2}</span>
-                  </div> */}
                   <div className="total_leave">
-                    Total Approved Leave :{" "}
-                    <span>
-                      {/* {countLeave.length - withoutSatReject.length / 2} */}
-                      {totalCount}
-                    </span>
+                    Total Approved Leave : <span>{totalCount}</span>
                   </div>
                 </>
               )}
-              {hide && (
+              {hide === true && selectedReason !== "Permission" && (
                 <div className="total_leave">
                   Total filtered Leave count: <span>{FilteredDays}</span>
                 </div>

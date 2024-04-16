@@ -153,3 +153,8 @@ thead tr th i {
     justify-content: space-evenly;
   }
 }
+
+tr.disable {
+  cursor: not-allowed;
+  background-color: #d2ebc5 !important;
+}

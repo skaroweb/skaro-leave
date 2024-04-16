@@ -13,7 +13,7 @@ const exportToExcel = (data) => {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   });
 
-  saveAs(excelBlob, "Employee-attendance-data.xlsx");
+  saveAs(excelBlob, "Employee-wfh-data.xlsx");
 };
 const ExcelReport = (props) => {
   const jsonData = props.items;
@@ -33,6 +33,8 @@ const ExcelReport = (props) => {
         day: "numeric",
       }),
       absencetype: obj.absencetype,
+      reason: obj.reason,
+      workFromHome: obj.workFromHome,
     }));
   };
 

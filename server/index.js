@@ -47,7 +47,7 @@ app.use("/createuser", async (req, res) => {
     if (date)
       return res.status(409).send({ message: `Apply date already Exist!` });
     const user = req.body;
-    // console.log(user);
+
     const newUser = new UserModel({
       name: req.body.name,
       absencetype: req.body.absencetype,
@@ -95,10 +95,11 @@ app.use("/update/:id", async (req, res) => {
   const date = await UserModel.findOne({
     currentuserid: req.body.currentuserid,
     applydate: req.body.applydate,
+    compensation: req.body.compensation,
   });
 
-  if (date)
-    return res.status(409).send({ message: `Apply date already Exist!` });
+  // if (date)
+  //   return res.status(409).send({ message: `Apply date already Exist!` });
 
   await UserModel.findByIdAndUpdate(req.params.id, req.body)
     .then((book) => res.json({ msg: "Updated successfully" }))

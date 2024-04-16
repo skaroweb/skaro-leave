@@ -68,7 +68,7 @@ const UpdateModal = ({ id, setIsLoading }) => {
                     //   value={new Date(applydate).toISOString().slice(0, 10)}
                   />
                 </div>
-                <div className="col-md-6 mt-2">
+                <div className="col-md-6 mt-2 mt-md-0">
                   <input
                     className="form-control"
                     type="date"

@@ -6,16 +6,19 @@ import "react-toastify/dist/ReactToastify.css";
 
 const UpdateModal = ({ id, setIsLoading }) => {
   const [applydate, setapplyDate] = useState("");
+  const [compensation, setCompensation] = useState(false);
   const adminProfile = useSelector((state) => state.adminProfile);
   const serverURL = process.env.REACT_APP_SERVER_URL;
   // new Date(id.applydate).toISOString().slice(0, 10)
-
+  //console.log(id);
   useEffect(() => {
     if (id && id._id) {
       axios
         .get(`${serverURL}/getusers/${id._id}`)
         .then((res) => {
+          console.log(res.data);
           setapplyDate(new Date(res.data.applydate).toISOString().slice(0, 10));
+          setCompensation(res.data.compensation);
         })
         .catch((err) => console.log(err, "it has an error"));
     }
@@ -23,10 +26,13 @@ const UpdateModal = ({ id, setIsLoading }) => {
 
   const updateRecords = () => {
     // console.log(id.currentuserid);
+    // setCompensation(id.compensation === true && true);
+    // console.log(compensation);
     axios
       .put(`${serverURL}/update/${id._id}`, {
         currentuserid: id.currentuserid,
         applydate: applydate,
+        compensation: compensation, // Include compensation in the update payload
       })
       .then((res) => {
         setIsLoading(true);
@@ -68,7 +74,7 @@ const UpdateModal = ({ id, setIsLoading }) => {
                     //   value={new Date(applydate).toISOString().slice(0, 10)}
                   />
                 </div>
-                <div className="col-md-6 mt-2">
+                <div className="col-md-6 mt-2 mt-md-0">
                   <input
                     className="form-control"
                     type="date"
@@ -78,6 +84,29 @@ const UpdateModal = ({ id, setIsLoading }) => {
                     value={applydate}
                     //   value={new Date(applydate).toISOString().slice(0, 10)}
                   />
+                </div>
+                <div className="col-md-12 mt-2">
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      name="compensation"
+                      id="compensation"
+                      checked={compensation}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          // Execute the action only if the checkbox is checked
+                          setCompensation(true); // Set compensation state to true
+                          // Additional action or logic here if needed
+                        } else {
+                          setCompensation(false); // Set compensation state to false if the checkbox is unchecked
+                        }
+                      }}
+                    />
+                    <label className="form-check-label" htmlFor="compensation">
+                      Compensation
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>

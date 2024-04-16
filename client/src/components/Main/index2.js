@@ -355,7 +355,7 @@ const Main2 = () => {
                                 name="Reason"
                                 onChange={() => {
                                   setReason("WFH");
-                                  setWorkfromhome("WFH");
+                                  setWorkfromhome();
                                   setAbsencetype();
                                   setPermissionTime();
                                 }}
@@ -445,6 +445,25 @@ const Main2 = () => {
                                 </option>
                                 <option value="half day">Half day Leave</option>
                               </select>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {reason === "WFH" && (
+                        <div className="row">
+                          <div className="mb-3 col-md-12">
+                            <div id="Name">
+                              <label className="form-label">WFH Time</label>
+                              <input
+                                className="form-control without_ampm"
+                                type="time"
+                                min="00:00"
+                                max="08:00"
+                                onChange={(event) => {
+                                  setWorkfromhome(event.target.value);
+                                }}
+                                value={workfromhome}
+                              />
                             </div>
                           </div>
                         </div>
